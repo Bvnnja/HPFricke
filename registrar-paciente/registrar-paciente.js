@@ -30,12 +30,16 @@ function mostrarPacientes() {
       <td>${p.diagnostico}</td>
       <td>${p.habitacion}</td>
       <td>
-        <button onclick="editarPaciente(${idx})">Editar</button>
+        <button onclick="redirigirEditar(${idx})">Editar</button>
       </td>
     `;
     tbody.appendChild(tr);
   });
 }
+
+window.redirigirEditar = function(idx) {
+  window.location.href = `../Editar-Datos-paciente/editar-datos-paciente.html?paciente=${idx}`;
+};
 
 document.getElementById('pacienteForm').addEventListener('submit', function(e) {
   e.preventDefault();

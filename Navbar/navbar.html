@@ -3,10 +3,19 @@
     <img src="https://www.hospitalfricke.cl/wp-content/uploads/2020/09/logo-hgf.png" alt="Hospital Gustavo Fricke" />
     <span>Hospital Gustavo Fricke</span>
   </div>
-  <ul class="navbar-links">
-    <li><a href="../inicio/inicio.html">Inicio</a></li>
-    <li><a href="../login/login.html">Iniciar Sesión</a></li>
-    <li><a href="../registro/registro.html">Registrarse</a></li>
-    <li><a href="../registrar-paciente/registrar-paciente.html">Registrar Paciente</a></li>
-  </ul>
+  <div class="navbar-content-right">
+    <ul class="navbar-links">
+      <li id="nav-inicio"><a href="../inicio/inicio.html">Inicio</a></li>
+      <li id="nav-login"><a href="../login/login.html">Iniciar Sesión</a></li>
+      <li id="nav-registro"><a href="../registro/registro.html">Registrarse</a></li>
+      <li id="nav-registrar-paciente" style="display:none;"><a href="../registrar-paciente/registrar-paciente.html">Registrar Paciente</a></li>
+    </ul>
+    <div id="navbar-usuario" class="navbar-usuario" style="display:none;">
+      <span id="usuario-nombre"></span>
+      <span class="flecha-abajo">▼</span>
+      <div id="usuario-menu" class="usuario-menu" style="display:none;">
+        <a href="#" id="cerrarSesion">Cerrar Sesión</a>
+      </div>
+    </div>
+  </div>
 </nav>
