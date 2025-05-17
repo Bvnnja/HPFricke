@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro de Incidencias Médicas</title>
+  <link rel="stylesheet" href="incidencias.css" />
+</head>
+<body>
+
+  <header class="header-titulo">
+  <img src="/imagenes/logo.png" alt="Logo Hospital" class="logo" />
+  <div class="doctor-name">Dr. Juan Pérez</div>
+</header>
+
+
+
+  <main>
+    <h1>Registrar Incidencia Médica</h1>
+
+    <form id="formIncidencia">
+      <label for="fecha">Fecha:</label>
+      <input type="date" id="fecha" required />
+
+      <label for="hora">Hora:</label>
+      <input type="time" id="hora" required />
+
+      <label for="descripcion">Descripción:</label>
+      <textarea id="descripcion" rows="3" required></textarea>
+
+      <label for="nivelUrgencia">Nivel de urgencia:</label>
+      <select id="nivelUrgencia" required>
+        <option value="">Seleccione</option>
+        <option value="Alta">Alta</option>
+        <option value="Media">Media</option>
+        <option value="Baja">Baja</option>
+      </select>
+
+      <label for="archivo">Adjuntar documento o imagen:</label>
+      <input type="file" id="archivo" accept="image/*,.pdf,.doc,.docx" />
+
+      <button type="submit">Registrar Incidencia</button>
+    </form>
+
+    <section>
+      <h2>Incidencias Registradas</h2>
+      <ul id="listaIncidencias"></ul>
+    </section>
+  </main>
+
+  <script src="incidencias.js"></script>
+</body>
+</html>

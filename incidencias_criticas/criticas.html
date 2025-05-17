@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Incidencias Críticas</title>
+  <link rel="stylesheet" href="criticas.css" />
+</head>
+<body>
+  <header>
+    <h1> Incidencias Críticas</h1>
+  </header>
+
+  <main>
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha y Hora</th>
+          <th>Descripción</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tablaIncidencias"></tbody>
+    </table>
+  </main>
+
+  <!-- Modal para historial -->
+  <div id="modalHistorial" class="modal">
+    <div class="modal-content">
+      <span id="cerrarModal" class="close">&times;</span>
+      <h2>Historial de Estados</h2>
+      <ul id="listaHistorial"></ul>
+    </div>
+  </div>
+
+  <script src="criticas.js"></script>
+</body>
+</html>

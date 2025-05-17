@@ -1,0 +1,134 @@
+/* RESET BÁSICO */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f5f8fa;
+  color: #333;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+/* HEADER */
+header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0); /*nombre doctor*/
+  padding: 10px 20px;
+  border-radius: 8px;
+}
+
+header img {
+  height: 50px;
+  margin-right: 20px;
+}
+
+.doctor-name {
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+/* MAIN */
+main {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgb(0 0 0 / 0.1);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+h1 {
+  margin-bottom: 15px;
+  text-align: center;
+  color: #005ea2;
+}
+
+/* LISTA PACIENTES */
+#pacientes {
+  list-style: none;
+  margin-bottom: 20px;
+}
+
+#pacientes li {
+  background-color: #e7f0fa;
+  margin-bottom: 10px;
+  padding: 15px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+#pacientes li:hover {
+  background-color: #d0e7ff;
+}
+
+.icono-alerta {
+  font-size: 1.5rem;
+  color: #ff3b3b;
+}
+
+/* BOTÓN SIMULAR ALERTA */
+#btnSimularAlerta {
+  background-color: #005ea2;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+#btnSimularAlerta:hover {
+  background-color: #004080;
+}
+
+/* MODAL */
+.modal {
+  display: none; /* Oculto por defecto */
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 10% auto;
+  padding: 20px 30px;
+  border-radius: 8px;
+  max-width: 400px;
+  box-shadow: 0 5px 15px rgb(0 0 0 / 0.3);
+  position: relative;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.cerrar {
+  color: #999;
+  position: absolute;
+  top: 10px; right: 15px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.cerrar:hover {
+  color: #ff3b3b;
+}
