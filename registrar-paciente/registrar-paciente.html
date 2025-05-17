@@ -6,6 +6,14 @@
   <link rel="stylesheet" href="registrar-paciente.css">
 </head>
 <body>
+  <script>
+    // Verificar si la sesión está iniciada
+    const usuarioLogueado = localStorage.getItem('usuarioLogueado');
+    if (!usuarioLogueado) {
+      alert('Debes iniciar sesión para acceder a esta página.');
+      window.location.href = '../login/login.html';
+    }
+  </script>
   <script src="../Navbar/navbar.js"></script>
   <div class="paciente-container">
     <h1>Registrar Paciente</h1>
