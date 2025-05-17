@@ -7,33 +7,36 @@
   <link rel="stylesheet" href="criticas.css" />
 </head>
 <body>
+    <script src="../Navbar/navbar.js"></script>
   <header>
-    <h1> Incidencias Críticas</h1>
+    <h1>Incidencias Críticas</h1>
   </header>
 
   <main>
-    <table>
-      <thead>
-        <tr>
-          <th>Fecha y Hora</th>
-          <th>Descripción</th>
-          <th>Estado</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody id="tablaIncidencias"></tbody>
-    </table>
+    <section class="incidencias-registradas">
+
+      <table id="tablaIncidenciasRegistradas">
+        <thead>
+          <tr>
+            <th>Médico</th>
+            <th>Paciente</th>
+            <th>Edad</th>
+            <th>Diagnóstico</th>
+            <th>Habitación</th>
+            <th>Fecha y Hora</th>
+            <th>Nivel de Urgencia</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Se llenará con JS -->
+        </tbody>
+      </table>
+    </section>
+
   </main>
 
-  <!-- Modal para historial -->
-  <div id="modalHistorial" class="modal">
-    <div class="modal-content">
-      <span id="cerrarModal" class="close">&times;</span>
-      <h2>Historial de Estados</h2>
-      <ul id="listaHistorial"></ul>
-    </div>
-  </div>
-
+  
   <script src="criticas.js"></script>
 </body>
 </html>

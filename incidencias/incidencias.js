@@ -1,137 +1,122 @@
-const form = document.getElementById('formIncidencia');
-const listaIncidencias = document.getElementById('listaIncidencias');
+document.addEventListener('DOMContentLoaded', () => {
+  const formIncidencias = document.getElementById('formIncidencias');
+  const listaIncidencias = document.getElementById('listaIncidencias');
+  const listaPacientes = document.getElementById('listaPacientes');
+  const medicoInput = document.getElementById('medico');
 
-let incidencias = JSON.parse(localStorage.getItem('incidencias')) || [];
-let editarId = null;
-
-// Mostrar incidencias guardadas en localStorage
-function mostrarIncidencias() {
-  listaIncidencias.innerHTML = '';
-
-  if(incidencias.length === 0) {
-    listaIncidencias.innerHTML = '<li>No hay incidencias registradas.</li>';
-    return;
+  // Recuperar incidencias desde localStorage
+  function obtenerIncidencias() {
+    return JSON.parse(localStorage.getItem('incidencias') || '[]');
   }
 
-  incidencias.forEach(incidencia => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <strong>Fecha y Hora:</strong> ${incidencia.fecha} ${incidencia.hora}<br/>
-      <strong>Descripción:</strong> ${incidencia.descripcion}<br/>
-      <strong>Nivel de urgencia:</strong> ${incidencia.nivelUrgencia}<br/>
-      ${incidencia.archivoNombre ? `<strong>Archivo:</strong> <a href="${incidencia.archivoURL}" target="_blank">${incidencia.archivoNombre}</a><br/>` : ''}
-      <button class="edit-btn" onclick="editarIncidencia(${incidencia.id})">Editar</button>
-      <button onclick="eliminarIncidencia(${incidencia.id})">Eliminar</button>
-    `;
-    listaIncidencias.appendChild(li);
-  });
-}
-
-// Validar fecha y hora
-function validarFechaHora(fecha, hora) {
-  const fechaHora = new Date(`${fecha}T${hora}`);
-  const ahora = new Date();
-  return fechaHora <= ahora; // No debe ser fecha/hora futura
-}
-
-// Validar nivel de urgencia
-function validarNivelUrgencia(nivel) {
-  const nivelesValidos = ['Alta', 'Media', 'Baja'];
-  return nivelesValidos.includes(nivel);
-}
-
-// Guardar archivo en base64 para simplificar almacenamiento local
-function leerArchivo(file) {
-  return new Promise((resolve, reject) => {
-    if (!file) resolve(null);
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject('Error leyendo archivo');
-    reader.readAsDataURL(file);
-  });
-}
-
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const fecha = form.fecha.value;
-  const hora = form.hora.value;
-  const descripcion = form.descripcion.value.trim();
-  const nivelUrgencia = form.nivelUrgencia.value;
-  const archivo = form.archivo.files[0];
-
-  // Validaciones
-  if(!validarFechaHora(fecha, hora)) {
-    alert('Fecha y hora no pueden ser futuras.');
-    return;
-  }
-  if(!validarNivelUrgencia(nivelUrgencia)) {
-    alert('Seleccione un nivel de urgencia válido.');
-    return;
-  }
-  if(descripcion === '') {
-    alert('Descripción no puede estar vacía.');
-    return;
+  // Guardar incidencias en localStorage
+  function guardarIncidencias(incidencias) {
+    localStorage.setItem('incidencias', JSON.stringify(incidencias));
   }
 
-  const archivoBase64 = await leerArchivo(archivo);
+  // Recuperar pacientes registrados desde localStorage
+  function obtenerPacientesRegistrados() {
+    return JSON.parse(localStorage.getItem('pacientes') || '[]');
+  }
 
-  if (editarId !== null) {
-    // Editar incidencia
-    incidencias = incidencias.map(i => {
-      if(i.id === editarId) {
-        return {
-          ...i,
-          fecha,
-          hora,
-          descripcion,
-          nivelUrgencia,
-          archivoURL: archivoBase64 || i.archivoURL,
-          archivoNombre: archivo ? archivo.name : i.archivoNombre,
-        };
-      }
-      return i;
+  // Recuperar médico logueado desde localStorage
+  function obtenerMedicoLogueado() {
+    const usuarioLogueado = JSON.parse(localStorage.getItem('usuarioLogueado') || '{}');
+    return usuarioLogueado.nombre || 'N/A';
+  }
+
+  // Llenar lista desplegable de pacientes registrados
+  function llenarListaPacientes() {
+    const pacientes = obtenerPacientesRegistrados();
+    pacientes.forEach((paciente) => {
+      const option = document.createElement('option');
+      option.value = paciente.nombre;
+      option.dataset.edad = paciente.edad;
+      option.dataset.diagnostico = paciente.diagnostico;
+      option.dataset.habitacion = paciente.habitacion;
+      option.textContent = paciente.nombre;
+      listaPacientes.appendChild(option);
     });
-    editarId = null;
-  } else {
-    // Crear nueva incidencia
-    const nuevaIncidencia = {
-      id: Date.now(),
-      fecha,
-      hora,
-      descripcion,
-      nivelUrgencia,
-      archivoURL: archivoBase64,
-      archivoNombre: archivo ? archivo.name : null,
-    };
-    incidencias.push(nuevaIncidencia);
   }
 
-  localStorage.setItem('incidencias', JSON.stringify(incidencias));
-  form.reset();
+  // Mostrar incidencias en la lista
+  function mostrarIncidencias() {
+    const incidencias = obtenerIncidencias();
+    listaIncidencias.innerHTML = `
+      <thead>
+        <tr>
+          <th>Médico</th>
+          <th>Paciente</th>
+          <th>Edad</th>
+          <th>Diagnóstico</th>
+          <th>Habitación</th>
+          <th>Fecha y Hora</th>
+          <th>Nivel de Urgencia</th>
+          <th>Descripción</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${incidencias
+          .map(
+            (incidencia, index) => `
+          <tr>
+            <td>${incidencia.medico}</td>
+            <td>${incidencia.paciente}</td>
+            <td>${incidencia.edad || 'N/A'}</td>
+            <td>${incidencia.diagnostico || 'N/A'}</td>
+            <td>${incidencia.habitacion || 'N/A'}</td>
+            <td>${incidencia.fechaHora}</td>
+            <td>${incidencia.nivelUrgencia}</td>
+            <td>${incidencia.descripcion}</td>
+            <td><button onclick="eliminarIncidencia(${index})">Eliminar</button></td>
+          </tr>
+        `
+          )
+          .join('')}
+      </tbody>
+    `;
+  }
+
+  // Registrar nueva incidencia
+  formIncidencias.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const medico = medicoInput.value;
+    const pacienteSeleccionado = listaPacientes.selectedOptions[0];
+    const paciente = pacienteSeleccionado ? pacienteSeleccionado.value : '';
+    const edad = pacienteSeleccionado ? pacienteSeleccionado.dataset.edad : '';
+    const diagnostico = pacienteSeleccionado ? pacienteSeleccionado.dataset.diagnostico : '';
+    const habitacion = pacienteSeleccionado ? pacienteSeleccionado.dataset.habitacion : '';
+    const fechaHora = document.getElementById('fechaHora').value;
+    const nivelUrgencia = document.getElementById('nivelUrgencia').value;
+    const descripcion = document.getElementById('descripcion').value.trim();
+
+    if (!medico || !paciente || !fechaHora || !nivelUrgencia || !descripcion) {
+      alert('Por favor, completa todos los campos.');
+      return;
+    }
+
+    const nuevaIncidencia = { medico, paciente, edad, diagnostico, habitacion, fechaHora, nivelUrgencia, descripcion };
+    const incidencias = obtenerIncidencias();
+    incidencias.push(nuevaIncidencia);
+    guardarIncidencias(incidencias);
+
+    formIncidencias.reset();
+    mostrarIncidencias();
+    alert('Incidencia registrada correctamente.');
+  });
+
+  // Eliminar incidencia
+  window.eliminarIncidencia = (index) => {
+    const incidencias = obtenerIncidencias();
+    incidencias.splice(index, 1);
+    guardarIncidencias(incidencias);
+    mostrarIncidencias();
+    alert('Incidencia eliminada correctamente.');
+  };
+
+  // Inicializar
+  medicoInput.value = obtenerMedicoLogueado();
+  llenarListaPacientes();
   mostrarIncidencias();
 });
-
-function editarIncidencia(id) {
-  const incidencia = incidencias.find(i => i.id === id);
-  if(!incidencia) return;
-
-  form.fecha.value = incidencia.fecha;
-  form.hora.value = incidencia.hora;
-  form.descripcion.value = incidencia.descripcion;
-  form.nivelUrgencia.value = incidencia.nivelUrgencia;
-  // No vamos a pre cargar el archivo porque no es posible en input file por seguridad.
-
-  editarId = id;
-}
-
-function eliminarIncidencia(id) {
-  if(confirm('¿Seguro que quieres eliminar esta incidencia?')) {
-    incidencias = incidencias.filter(i => i.id !== id);
-    localStorage.setItem('incidencias', JSON.stringify(incidencias));
-    mostrarIncidencias();
-  }
-}
-
-// Inicializar lista en carga
-mostrarIncidencias();
