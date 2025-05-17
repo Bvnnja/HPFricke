@@ -1,0 +1,63 @@
+body {
+  background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+}
+.registro-container {
+  max-width: 370px;
+  margin: 60px auto;
+  padding: 32px 28px 24px 28px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(33, 150, 243, 0.10), 0 1.5px 8px rgba(0,0,0,0.04);
+  border-top: 6px solid #1976d2;
+  text-align: center;
+}
+.registro-container h2 {
+  color: #1976d2;
+  margin-bottom: 18px;
+  font-weight: 600;
+}
+.registro-container input {
+  width: 92%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 6px;
+  border: 1px solid #b0bec5;
+  background: #f5fafd;
+  font-size: 15px;
+  transition: border 0.2s;
+}
+.registro-container input:focus {
+  border: 1.5px solid #1976d2;
+  outline: none;
+  background: #e3f2fd;
+}
+.registro-container button {
+  width: 100%;
+  padding: 12px;
+  background: #388e3c;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  margin-top: 14px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(56,142,60,0.08);
+}
+.registro-container button:hover {
+  background: #2e7031;
+}
+.registro-container a {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+}
+.registro-container p {
+  margin-top: 18px;
+  color: #607d8b;
+  font-size: 14px;
+}

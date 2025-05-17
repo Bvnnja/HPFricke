@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registrar Paciente - Hospital Gustavo Fricke</title>
+  <link rel="stylesheet" href="registrar-paciente.css">
+</head>
+<body>
+  <div class="paciente-container">
+    <h1>Registrar Paciente</h1>
+    <form id="pacienteForm">
+      <input type="text" id="nombre" placeholder="Nombre completo" required>
+      <input type="number" id="edad" placeholder="Edad" required>
+      <input type="text" id="diagnostico" placeholder="Diagnóstico" required>
+      <input type="text" id="habitacion" placeholder="Habitación" required>
+      <button type="submit" id="guardarBtn">Registrar Paciente</button>
+      <button type="button" id="cancelarBtn" style="display:none;">Cancelar</button>
+    </form>
+    <h2>Pacientes Registrados</h2>
+    <table id="tablaPacientes">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Edad</th>
+          <th>Diagnóstico</th>
+          <th>Habitación</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Pacientes se mostrarán aquí -->
+      </tbody>
+    </table>
+    <div style="margin-top:24px;">
+      <a href="../inicio/inicio.html" class="btn-volver">Volver al inicio</a>
+    </div>
+  </div>
+  <script src="registrar-paciente.js"></script>
+</body>
+</html>
