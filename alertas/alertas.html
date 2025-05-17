@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alertas Cambio Postural - Enfermeros</title>
+  <link rel="stylesheet" href="alertas.css" />
+</head>
+<body>
+
+  <header>
+    <img src="/imagenes/logo.png" alt="Logo Hospital" />
+    <div class="doctor-name">Dr. Juan Pérez</div>
+  </header>
+
+  <main>
+    <h1>Pacientes Vinculados</h1>
+    <ul id="pacientes">
+      <!-- Se llenará con JS -->
+    </ul>
+
+    <button id="btnSimularAlerta">Simular alerta de cambio de postura</button>
+  </main>
+
+  <div id="alerta"></div>
+
+  <!-- Modal para notificación individual -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span id="cerrarModal" class="cerrar">&times;</span>
+      <p id="mensajeModal"></p>
+    </div>
+  </div>
+
+  <audio id="audioAlerta" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" preload="auto"></audio>
+
+  <script src="alertas.js"></script>
+
+</body>
+</html>
