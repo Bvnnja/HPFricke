@@ -33,9 +33,13 @@ function cargarNavbar() {
           const navLogin = document.getElementById('nav-login');
           const navRegistro = document.getElementById('nav-registro');
           const navRegistrarPaciente = document.getElementById('nav-registrar-paciente');
+          const navRegistrarIncidencias = document.getElementById('nav-registrar-incidencias');
+          const navPacientes = document.getElementById('nav-pacientes');
           if (navLogin) navLogin.style.display = 'none';
           if (navRegistro) navRegistro.style.display = 'none';
           if (navRegistrarPaciente) navRegistrarPaciente.style.display = 'block';
+          if (navRegistrarIncidencias) navRegistrarIncidencias.style.display = 'block';
+          if (navPacientes) navPacientes.style.display = 'block';
 
           // Mostrar nombre de usuario
           const usuarioDiv = document.getElementById('navbar-usuario');
@@ -61,6 +65,19 @@ function cargarNavbar() {
               });
             }
           }
+        } else {
+          const navLogin = document.getElementById('nav-login');
+          const navRegistro = document.getElementById('nav-registro');
+          const navRegistrarPaciente = document.getElementById('nav-registrar-paciente');
+          const navRegistrarIncidencias = document.getElementById('nav-registrar-incidencias');
+          const navPacientes = document.getElementById('nav-pacientes');
+          const usuarioDiv = document.getElementById('navbar-usuario');
+          if (navLogin) navLogin.style.display = 'block';
+          if (navRegistro) navRegistro.style.display = 'block';
+          if (navRegistrarPaciente) navRegistrarPaciente.style.display = 'none';
+          if (navRegistrarIncidencias) navRegistrarIncidencias.style.display = 'none';
+          if (navPacientes) navPacientes.style.display = 'none';
+          if (usuarioDiv) usuarioDiv.style.display = 'none';
         }
       }, 100);
     });

@@ -1,262 +1,134 @@
 /* General */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f5f8fa;
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
   margin: 0;
-  padding: 0 20px;
-  color: #333;
+  padding: 0;
 }
 
 h1 {
-  text-align: center;
-  color: #005f73;
-  margin-top: 40px;
-  margin-bottom: 30px;
-  font-weight: 700;
-}
-
-/* Formulario */
-form {
-  max-width: 600px;
-  margin: 0 auto 40px auto;
-  background: white;
-  padding: 25px 30px;
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-}
-
-form label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: #0a9396;
-}
-
-form input[type="date"],
-form input[type="time"],
-form select,
-form textarea,
-form input[type="file"] {
-  width: 100%;
-  padding: 8px 12px;
+  color: #1976d2;
+  font-size: 24px;
   margin-bottom: 20px;
-  border: 1.8px solid #94d2bd;
-  border-radius: 6px;
-  font-size: 1rem;
-  color: #333;
-  transition: border-color 0.3s ease;
-}
-
-form input[type="date"]:focus,
-form input[type="time"]:focus,
-form select:focus,
-form textarea:focus,
-form input[type="file"]:focus {
-  outline: none;
-  border-color: #005f73;
-}
-
-form textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-form button {
-  background-color: #0a9396;
-  color: white;
-  font-size: 1.1rem;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-weight: 700;
-  display: block;
-  width: 100%;
-}
-
-form button:hover {
-  background-color: #007a6b;
-}
-
-/* Mensajes de error */
-.error {
-  color: #d00000;
-  font-weight: 600;
-  margin-top: -15px;
-  margin-bottom: 15px;
-  font-size: 0.9rem;
-}
-
-/* Tabla incidencias */
-table {
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto 60px auto;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-  overflow: hidden;
-}
-
-thead {
-  background-color: #0a9396;
-  color: white;
-}
-
-thead th {
-  padding: 15px 10px;
-  text-align: left;
-  font-weight: 700;
-}
-
-tbody tr {
-  border-bottom: 1px solid #ccc;
-  transition: background-color 0.2s ease;
-}
-
-tbody tr:hover {
-  background-color: #e0fbfc;
-}
-
-tbody td {
-  padding: 12px 10px;
-  vertical-align: middle;
-  color: #333;
-}
-
-/* Botones en tabla */
-.btn-accion {
-  padding: 6px 14px;
-  margin-right: 8px;
-  font-size: 0.9rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
-}
-
-.btn-editar {
-  background-color: #fca311;
-  color: white;
-}
-
-.btn-editar:hover {
-  background-color: #d18b06;
-}
-
-.btn-eliminar {
-  background-color: #d00000;
-  color: white;
-}
-
-.btn-eliminar:hover {
-  background-color: #a70000;
-}
-
-/* Contenedor para adjunto */
-.adjunto-nombre {
-  font-style: italic;
-  color: #555;
-  font-size: 0.9rem;
-}
-
-/* Responsive */
-@media (max-width: 700px) {
-  form, table {
-    width: 100%;
-    margin: 20px auto;
-  }
-}
-
-.header-titulo {
-  display: flex;
-  align-items: center;  /* centra verticalmente */
-  justify-content: center; /* centra horizontalmente todo el conjunto */
-  gap: 15px; /* espacio entre logo y texto */
-  margin-top: 40px;
-  margin-bottom: 30px;
+  text-align: center;
 }
 
 /* Header estilo como alerta */
-header {
+.header-titulo {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
-  background-color: #ffffff;
-  color: rgb(0, 0, 0); /* color del nombre del doctor */
+  justify-content: space-between;
+  background: #1976d2;
+  color: #fff;
   padding: 10px 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-header img {
-  height: 50px; /* logo más pequeño */
-  margin-right: 20px;
+.header-titulo img {
+  height: 50px;
 }
 
-.doctor-name {
-  font-weight: 700;
-  font-size: 1.5rem;
+.header-titulo .doctor-name {
+  font-size: 18px;
+  font-weight: bold;
 }
 
-#listaIncidencias {
+/* Main container */
+main {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 0;
-  list-style: none;
-  margin-top: 30px;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-#listaIncidencias li {
-  background-color: #e7f5ff;
-  padding: 20px 25px;
-  margin-bottom: 20px;
+.formulario-incidencias {
+  background: #f9f9f9;
+  padding: 20px;
   border-radius: 10px;
-  width: 100%;
-  max-width: 550px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-#listaIncidencias li p {
-  margin: 10px 0;
+.incidencias-registradas {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-#listaIncidencias li .acciones {
-  margin-top: 10px;
+.incidencias-registradas h2 {
+  margin-bottom: 20px;
+  color: #1976d2;
+}
+
+/* Formulario */
+form#formIncidencias {
   display: flex;
-  justify-content: center;
-  gap: 12px;
+  flex-direction: column;
+  gap: 15px;
 }
 
-#listaIncidencias li .acciones button {
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
+form#formIncidencias input,
+form#formIncidencias select,
+form#formIncidencias textarea,
+form#formIncidencias button {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form#formIncidencias button {
+  background: #1976d2;
+  color: #fff;
   cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
+  transition: background 0.3s;
 }
 
-#listaIncidencias li .btn-editar {
-  background-color: #fca311;
-  color: white;
+form#formIncidencias button:hover {
+  background: #1565c0;
 }
 
-#listaIncidencias li .btn-editar:hover {
-  background-color: #d18b06;
+/* Lista de incidencias */
+#listaIncidencias {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: left;
 }
 
-#listaIncidencias li .btn-eliminar {
-  background-color: #d00000;
-  color: white;
+#listaIncidencias th,
+#listaIncidencias td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
 }
 
-#listaIncidencias li .btn-eliminar:hover {
-  background-color: #a70000;
+#listaIncidencias th {
+  background-color: #1976d2;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+#listaIncidencias tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#listaIncidencias tr:hover {
+  background-color: #e3f2fd;
+}
+
+#listaIncidencias button {
+  padding: 6px 10px;
+  background: #d32f2f;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.3s;
+}
+
+#listaIncidencias button:hover {
+  background: #b71c1c;
 }
 
