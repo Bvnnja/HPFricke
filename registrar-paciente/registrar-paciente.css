@@ -112,3 +112,23 @@ body {
 .btn-volver:hover {
   background: #90a4ae;
 }
+.btn-editar-paciente {
+  display: inline-block;
+  padding: 12px 28px;
+  background: linear-gradient(90deg, #1976d2 60%, #388e3c 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-right: 12px;
+  box-shadow: 0 2px 8px rgba(33,150,243,0.10);
+  transition: background 0.2s, transform 0.2s;
+  letter-spacing: 0.5px;
+}
+.btn-editar-paciente:hover {
+  background: linear-gradient(90deg, #1565c0 60%, #2e7031 100%);
+  color: #ffeb3b;
+  transform: translateY(-2px) scale(1.04);
+}
