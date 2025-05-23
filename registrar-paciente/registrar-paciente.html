@@ -19,9 +19,18 @@
     <h1>Registrar Paciente</h1>
     <form id="pacienteForm">
       <input type="text" id="nombre" placeholder="Nombre completo" required>
+      <input type="text" id="rut" placeholder="RUT (Ej: 12.345.678-9)" required>
       <input type="number" id="edad" placeholder="Edad" required>
+      <select id="sexo" required>
+        <option value="">Sexo</option>
+        <option value="Femenino">Femenino</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Otro">Otro</option>
+      </select>
       <input type="text" id="diagnostico" placeholder="Diagnóstico" required>
       <input type="text" id="habitacion" placeholder="Habitación" required>
+      <input type="date" id="fechaIngreso" required>
+      <textarea id="observaciones" placeholder="Observaciones" rows="2"></textarea>
       <button type="submit" id="guardarBtn">Registrar Paciente</button>
       <button type="button" id="cancelarBtn" style="display:none;">Cancelar</button>
     </form>
@@ -30,9 +39,13 @@
       <thead>
         <tr>
           <th>Nombre</th>
+          <th>RUT</th>
           <th>Edad</th>
+          <th>Sexo</th>
           <th>Diagnóstico</th>
           <th>Habitación</th>
+          <th>Fecha Ingreso</th>
+          <th>Observaciones</th>
           <th>Acciones</th>
         </tr>
       </thead>

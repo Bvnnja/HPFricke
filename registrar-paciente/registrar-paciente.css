@@ -5,19 +5,20 @@ body {
   min-height: 100vh;
 }
 .paciente-container {
-  max-width: 700px;
+  max-width: 800px;
   margin: 60px auto;
-  padding: 32px 28px 24px 28px;
-  border-radius: 14px;
+  padding: 36px 32px 28px 32px;
+  border-radius: 16px;
   background: #fff;
   box-shadow: 0 4px 24px rgba(33, 150, 243, 0.10), 0 1.5px 8px rgba(0,0,0,0.04);
-  border-top: 8px solid #1976d2;
+  border-top: 10px solid #1976d2;
   text-align: center;
 }
 .paciente-container h1 {
   color: #1976d2;
   margin-bottom: 18px;
   font-weight: 700;
+  letter-spacing: 1px;
 }
 .paciente-container h2 {
   color: #388e3c;
@@ -25,38 +26,105 @@ body {
   margin-bottom: 12px;
   font-weight: 600;
 }
+
+/* Mejor organización visual y hospitalaria para el formulario */
 #pacienteForm {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-  margin-bottom: 18px;
-}
-#pacienteForm input {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #b0bec5;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 24px;
+  justify-items: stretch;
+  align-items: center;
+  margin-bottom: 22px;
   background: #f5fafd;
-  font-size: 15px;
-  width: 180px;
-  transition: border 0.2s;
+  border-radius: 14px;
+  padding: 28px 18px 18px 18px;
+  box-shadow: 0 2px 12px #e3f2fd;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
 }
-#pacienteForm input:focus {
+
+#pacienteForm input,
+#pacienteForm select {
+  width: 100%;
+  min-width: 0;
+  font-size: 16px;
+}
+
+#pacienteForm textarea {
+  grid-column: 1 / span 2;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin-top: 2px;
+  font-size: 16px;
+}
+
+#pacienteForm button[type="submit"] {
+  grid-column: 2 / 3;
+  width: 100%;
+  margin-left: 0;
+  margin-top: 10px;
+  padding: 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+#pacienteForm button[type="button"] {
+  grid-column: 1 / 2;
+  width: 100%;
+  margin-left: 0;
+  margin-top: 10px;
+  padding: 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Mejora visual de los inputs */
+#pacienteForm input,
+#pacienteForm select,
+#pacienteForm textarea {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1.5px solid #b0bec5;
+  background: #f5fafd;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  resize: none;
+}
+
+#pacienteForm input:focus,
+#pacienteForm select:focus,
+#pacienteForm textarea:focus {
   border: 1.5px solid #1976d2;
   outline: none;
   background: #e3f2fd;
+  box-shadow: 0 2px 8px #e3f2fd;
 }
-#pacienteForm button {
-  padding: 10px 18px;
-  background: #1976d2;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 15px;
+
+/* Etiquetas para los campos (si decides agregarlas en el HTML) */
+#pacienteForm label {
   font-weight: 500;
+  color: #1976d2;
+  margin-bottom: 2px;
+  display: block;
+  font-size: 15px;
+}
+
+/* Botones */
+#pacienteForm button {
+  border-radius: 8px;
+  border: none;
   cursor: pointer;
   transition: background 0.2s;
-  margin-left: 6px;
+}
+#pacienteForm button[type="submit"] {
+  background: #1976d2;
+  color: #fff;
+}
+#pacienteForm button[type="submit"]:hover {
+  background: #1565c0;
 }
 #pacienteForm button[type="button"] {
   background: #b0bec5;
@@ -65,13 +133,29 @@ body {
 #pacienteForm button[type="button"]:hover {
   background: #90a4ae;
 }
-#pacienteForm button:hover {
-  background: #1565c0;
+
+/* Responsive para el formulario grid */
+@media (max-width: 900px) {
+  #pacienteForm {
+    grid-template-columns: 1fr;
+    padding: 14px 4vw;
+    gap: 14px 0;
+    max-width: 98vw;
+  }
+  #pacienteForm textarea {
+    grid-column: 1 / span 1;
+  }
+  #pacienteForm button[type="submit"],
+  #pacienteForm button[type="button"] {
+    grid-column: 1 / span 1;
+  }
 }
+
 #tablaPacientes {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
+  font-size: 15px;
 }
 #tablaPacientes th, #tablaPacientes td {
   border: 1px solid #b0bec5;
@@ -85,6 +169,7 @@ body {
 }
 #tablaPacientes td {
   background: #f5fafd;
+  word-break: break-word;
 }
 #tablaPacientes button {
   padding: 5px 12px;
@@ -131,4 +216,18 @@ body {
   background: linear-gradient(90deg, #1565c0 60%, #2e7031 100%);
   color: #ffeb3b;
   transform: translateY(-2px) scale(1.04);
+}
+@media (max-width: 900px) {
+  .paciente-container {
+    padding: 18px 4vw;
+  }
+}
+@media (max-width: 600px) {
+  .paciente-container {
+    padding: 8px 2vw;
+  }
+  #tablaPacientes th, #tablaPacientes td {
+    font-size: 13px;
+    padding: 5px 2px;
+  }
 }

@@ -12,6 +12,35 @@
       <li id="nav-registrar-incidencias" style="display:none;"><a href="../incidencias/incidencias.html">Registrar Incidencias</a></li>
       <li id="nav-pacientes" style="display:none;"><a href="../pacientes/pacientes.html">Pacientes</a></li>
     </ul>
+    <!-- Notificación de alertas críticas -->
+    <div id="navbar-notificacion-critica" style="display:inline-block;position:relative;margin-left:18px;cursor:pointer;">
+      <span style="font-size:22px;vertical-align:middle;">🔔</span>
+      <span id="navbar-notificacion-contador" style="position:absolute;top:-8px;right:-8px;background:#d32f2f;color:#fff;border-radius:50%;padding:2px 7px;font-size:13px;display:none;">0</span>
+    </div>
+    <!-- Modal de notificaciones críticas -->
+    <div id="modal-notificaciones-criticas" style="display:none;position:fixed;top:60px;right:30px;z-index:9999;background:#fff3cd;border:2px solid #ff9800;border-radius:10px;box-shadow:0 2px 8px rgba(255,193,7,0.18);max-width:340px;width:90vw;padding:18px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h3 style="color:#d32f2f;font-size:20px;margin:0;">Notificaciones Críticas</h3>
+        <div>
+          <button id="abrir-configuracion-alerta" style="background:none;border:none;font-size:20px;cursor:pointer;margin-right:8px;" title="Personalizar alerta">⚙️</button>
+          <button id="cerrar-modal-notificaciones" style="background:none;border:none;font-size:20px;cursor:pointer;color:#111;">✖</button>
+        </div>
+      </div>
+      <!-- Formulario de configuración (oculto por defecto) -->
+      <form id="form-configuracion-alerta" style="display:none;margin-top:10px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <label for="color-notificacion" style="font-size:15px;min-width:120px;">Color de notificación:</label>
+          <input type="color" id="color-notificacion" value="#d32f2f" style="width:40px;height:30px;vertical-align:middle;border:none;background:none;box-shadow:0 0 2px #888;">
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;">
+          <button type="submit" style="background:#1976d2;color:#fff;border:none;padding:6px 18px;border-radius:5px;cursor:pointer;font-weight:500;">Guardar</button>
+          <button type="button" id="cancelar-configuracion-alerta" style="background:#b0bec5;color:#263238;border:none;padding:6px 18px;border-radius:5px;cursor:pointer;">Cancelar</button>
+        </div>
+      </form>
+      <ul id="lista-notificaciones-navbar" style="list-style:none;padding:0;margin:14px 0 0 0;max-height:300px;overflow-y:auto;">
+        <!-- Se llenará con JS -->
+      </ul>
+    </div>
     <div id="navbar-usuario" class="navbar-usuario" style="display:none;">
       <span id="usuario-nombre"></span>
       <span class="flecha-abajo">▼</span>
@@ -21,3 +50,57 @@
     </div>
   </div>
 </nav>
+<script>
+  // Solo lógica de color
+  function aplicarColorNotificacionesNavbar() {
+    let usuario = JSON.parse(localStorage.getItem('usuarioLogueado') || '{}');
+    let key = usuario && usuario.nombre ? `configUsuario_${usuario.nombre}` : 'configUsuario_default';
+    let config = JSON.parse(localStorage.getItem(key) || '{}');
+    let color = config.color || '#d32f2f';
+    document.querySelectorAll('.noti-critica-li').forEach(li => {
+      li.style.borderColor = color;
+      li.style.background = color + '22';
+    });
+    document.querySelectorAll('.noti-critica-estado').forEach(span => {
+      span.style.background = color;
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const notiDiv = document.getElementById('navbar-notificacion-critica');
+    const modal = document.getElementById('modal-notificaciones-criticas');
+    const cerrar = document.getElementById('cerrar-modal-notificaciones');
+    const formConfig = document.getElementById('form-configuracion-alerta');
+    const inputColor = document.getElementById('color-notificacion');
+    const btnCancelar = document.getElementById('cancelar-configuracion-alerta');
+
+    if (notiDiv && modal) {
+      notiDiv.addEventListener('click', function() {
+        modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
+        setTimeout(aplicarColorNotificacionesNavbar, 100);
+      });
+    }
+    if (cerrar && modal) {
+      cerrar.addEventListener('click', function() {
+        modal.style.display = 'none';
+      });
+    }
+    if (formConfig && inputColor) {
+      formConfig.onsubmit = function(e) {
+        e.preventDefault();
+        let usuario = JSON.parse(localStorage.getItem('usuarioLogueado') || '{}');
+        let key = usuario && usuario.nombre ? `configUsuario_${usuario.nombre}` : 'configUsuario_default';
+        let config = JSON.parse(localStorage.getItem(key) || '{}');
+        config.color = inputColor.value;
+        localStorage.setItem(key, JSON.stringify(config));
+        formConfig.style.display = 'none';
+        setTimeout(aplicarColorNotificacionesNavbar, 100);
+      };
+    }
+    if (btnCancelar && formConfig) {
+      btnCancelar.onclick = function() {
+        formConfig.style.display = 'none';
+      };
+    }
+  });
+</script>
