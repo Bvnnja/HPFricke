@@ -102,3 +102,97 @@
   background: #f5f5f5;
   color: #1565c0;
 }
+/* Notificaciones críticas (dashboard y modal navbar) */
+.noti-critica-li {
+  color: #000000;
+  background: #f01c1c;
+  border: 1.5px solid #d32f2f;
+  border-radius: 7px;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(211,47,47,0.07);
+  transition: background 0.2s, border 0.2s;
+}
+.noti-critica-li:hover {
+  background: #ff0202;
+  
+  border-color: #b71c1c;
+}
+.noti-critica-estado {
+  color: #fff;
+  
+  background: #d32f2f;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 15px;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+/* Formulario de configuración de notificaciones críticas */
+#form-configuracion-alerta {
+  background: #fffbe7;
+  border-radius: 8px;
+  padding: 12px 10px 10px 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+#form-configuracion-alerta label {
+  color: #d32f2f;
+  font-weight: 500;
+}
+#form-configuracion-alerta input[type="color"] {
+  border: none;
+  background: none;
+  width: 40px;
+  height: 30px;
+  cursor: pointer;
+  box-shadow: 0 0 2px #888;
+  margin-left: 4px;
+}
+#form-configuracion-alerta button[type="submit"] {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  padding: 6px 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+#form-configuracion-alerta button[type="submit"]:hover {
+  background: #1251a3;
+}
+#form-configuracion-alerta button[type="button"] {
+  background: #b0bec5;
+  color: #263238;
+  border: none;
+  padding: 6px 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+#form-configuracion-alerta button[type="button"]:hover {
+  background: #90a4ae;
+}
+
+/* Fondo y borde del modal de notificaciones críticas */
+#modal-notificaciones-criticas {
+  background: #fff3cd !important;
+  border: 2px solid #ff9800 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 2px 8px rgba(255,193,7,0.18) !important;
+  max-width: 340px;
+  width: 90vw;
+  padding: 18px 16px;
+}
+
+/* Título del modal */
+#modal-notificaciones-criticas h3 {
+  color: #d32f2f;
+  font-size: 20px;
+  margin: 0;
+}

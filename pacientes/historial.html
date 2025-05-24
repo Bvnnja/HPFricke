@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Historial de Cambios Posturales</title>
+  <link rel="stylesheet" href="historial.css">
+</head>
+<body>
+  <script src="../Navbar/navbar.js"></script>
+  <div class="historial-container">
+    <h1>Historial de Cambios Posturales</h1>
+    <div class="filtros-historial">
+      <!-- Quitar filtro por estado -->
+      <input type="text" id="filtroPacienteHist" placeholder="Buscar por paciente..." style="margin-left:0;">
+    </div>
+    <table id="tablaHistorial">
+      <thead>
+        <tr>
+          <th>Paciente</th>
+          <th>Fecha | Hora</th>
+          <th>Postura</th>
+          <th>Medico Responsable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Se llena con JS -->
+      </tbody>
+    </table>
+  </div>
+  <script>
+    function badgeEstado(estado) {
+      if (estado === 'realizado') return '<span class="badge-hist badge-realizado">Realizado</span>';
+      if (estado === 'critico') return '<span class="badge-hist badge-critico">Crítico</span>';
+      if (estado === 'pendiente') return '<span class="badge-hist badge-pendiente">Pendiente</span>';
+      return '<span class="badge-hist badge-registrado">Registrado</span>';
+    }
+    function renderizarHistorial(filtroPaciente = '') {
+      const historial = JSON.parse(localStorage.getItem('historialCambios') || '[]');
+      const tbody = document.getElementById('tablaHistorial').querySelector('tbody');
+      tbody.innerHTML = '';
+      historial.forEach(item => {
+        if (filtroPaciente && !item.paciente.toLowerCase().includes(filtroPaciente.toLowerCase())) {
+          return;
+        }
+        // Formatear fecha/hora
+        let fecha = '';
+        let hora = '';
+        if (item.fechaHora) {
+          const dt = new Date(item.fechaHora);
+          if (!isNaN(dt.getTime())) {
+            fecha = dt.toLocaleDateString();
+            hora = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          } else if (typeof item.fechaHora === 'string' && item.fechaHora.includes(',')) {
+            const partes = item.fechaHora.split(',');
+            fecha = partes[0].trim();
+            hora = partes[1].trim();
+          } else {
+            fecha = item.fechaHora;
+          }
+        }
+        const tr = document.createElement('tr');
+        // Mostrar la postura (badge) en la columna "Postura"
+        tr.innerHTML = `<td>${item.paciente}</td><td>${fecha}${hora ? ' | ' + hora : ''}</td><td>${badgeEstado(item.estado)}</td><td>${item.responsable}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    // Quitar filtro por estado
+    // document.getElementById('filtroEstadoHist').addEventListener('change', function() {
+    //   renderizarHistorial(this.value, document.getElementById('filtroPacienteHist').value);
+    // });
+    document.getElementById('filtroPacienteHist').addEventListener('input', function() {
+      renderizarHistorial(this.value);
+    });
+    renderizarHistorial();
+  </script>
+</body>
+</html>

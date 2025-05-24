@@ -1,126 +1,149 @@
 const esSupervisor = true;
 
-const incidenciasCriticas = [
-  {
-    id: 1,
-    fechaHora: '2025-05-16 08:00',
-    descripcion: 'Paciente sin cambio de postura en más de 4 horas.',
-    estado: 'Pendiente',
-    historial: ['Pendiente']
-  },
-  {
-    id: 2,
-    fechaHora: '2025-05-16 10:10',
-    descripcion: 'Sensor detectó posición de riesgo para úlceras.',
-    estado: 'En proceso',
-    historial: ['Pendiente', 'En proceso']
-  },
-  {
-    id: 3,
-    fechaHora: '2025-05-16 11:30',
-    descripcion: 'Paciente con inclinación riesgosa para caída.',
-    estado: 'Pendiente',
-    historial: ['Pendiente']
-  }
-];
+function obtenerIncidenciasCriticas() {
+  const incidencias = JSON.parse(localStorage.getItem('incidencias') || '[]');
+  // Solo las críticas
+  return incidencias
+    .map((inc, idx) => ({ ...inc, _id: idx }))
+    .filter(inc => inc.nivelUrgencia && inc.nivelUrgencia.toLowerCase() === 'critico');
+}
 
-function renderizarTablaCriticas() {
-  const tbody = document.getElementById('tablaIncidencias');
+function obtenerSeguimientoIncidencias() {
+  return JSON.parse(localStorage.getItem('seguimientoIncidencias') || '[]');
+}
+
+function guardarSeguimientoIncidencias(seguimiento) {
+  localStorage.setItem('seguimientoIncidencias', JSON.stringify(seguimiento));
+}
+
+function getRolUsuario() {
+  const usuario = JSON.parse(localStorage.getItem('usuarioLogueado') || '{}');
+  return usuario.rol || '';
+}
+
+function renderizarTablaCriticas(filtroEstado = '', filtroPaciente = '') {
+  const tbody = document.getElementById('tablaIncidenciasRegistradas').querySelector('tbody');
   tbody.innerHTML = '';
-
-  incidenciasCriticas.forEach(inc => {
+  const criticas = obtenerIncidenciasCriticas().filter(inc => {
+    let match = true;
+    if (filtroEstado) match = inc.estado === filtroEstado;
+    if (filtroPaciente) match = match && inc.paciente.toLowerCase().includes(filtroPaciente.toLowerCase());
+    return match;
+  });
+  const rol = getRolUsuario();
+  criticas.forEach((inc, idx) => {
     const fila = document.createElement('tr');
     fila.innerHTML = `
+      <td>${inc.medico}</td>
+      <td>${inc.paciente}</td>
+      <td>${inc.edad || 'N/A'}</td>
+      <td>${inc.diagnostico || 'N/A'}</td>
+      <td>${inc.habitacion || 'N/A'}</td>
       <td>${inc.fechaHora}</td>
+      <td><span class="badge-estado badge-${inc.estado?.toLowerCase() || 'pendiente'}">${inc.nivelUrgencia}</span></td>
       <td>${inc.descripcion}</td>
-      <td>${inc.estado}</td>
       <td>
-        <button class="btn btn-historial" onclick="verHistorial(${inc.id})">Ver historial</button>
-        ${esSupervisor ? `<button class="btn btn-cambiar" onclick="cambiarEstado(${inc.id})">Cambiar estado</button>` : ''}
+        <button class="btn btn-historial" onclick="verHistorialIncidencia(${inc._id})" ${rol !== 'supervisor' ? 'disabled' : ''}>Ver historial</button>
+        <button class="btn btn-cambiar" onclick="abrirModalCambioEstado(${inc._id})" ${rol !== 'supervisor' ? 'disabled' : ''}>Cambiar estado</button>
       </td>
     `;
     tbody.appendChild(fila);
   });
 }
 
-function cambiarEstado(id) {
-  const incidencia = incidenciasCriticas.find(i => i.id === id);
-  const nuevoEstado = prompt('Ingrese nuevo estado:', incidencia.estado);
-  if (nuevoEstado && nuevoEstado !== incidencia.estado) {
-    incidencia.estado = nuevoEstado;
-    incidencia.historial.push(nuevoEstado);
-    alert('Estado actualizado');
-    renderizarTablaCriticas();
-  }
-}
-
-function verHistorial(id) {
-  const incidencia = incidenciasCriticas.find(i => i.id === id);
-  const lista = document.getElementById('listaHistorial');
+window.verHistorialIncidencia = function(idx) {
+  // HU-14: Mostrar historial de cambios de estado de la incidencia
+  const seguimiento = obtenerSeguimientoIncidencias().filter(s => s.incidenciaId == idx);
+  const lista = document.getElementById('listaHistorialIncidencia');
   lista.innerHTML = '';
-  incidencia.historial.forEach(e => {
-    const li = document.createElement('li');
-    li.textContent = e;
-    lista.appendChild(li);
-  });
-  document.getElementById('modalHistorial').style.display = 'block';
-}
-
-document.getElementById('cerrarModal').onclick = function () {
-  document.getElementById('modalHistorial').style.display = 'none';
+  if (seguimiento.length === 0) {
+    lista.innerHTML = '<li>No hay historial de cambios para esta incidencia.</li>';
+  } else {
+    seguimiento.forEach(s => {
+      const li = document.createElement('li');
+      li.textContent = `${new Date(s.fecha).toLocaleString()} - Estado: ${s.nuevoEstado} (por ${s.responsable})`;
+      lista.appendChild(li);
+    });
+  }
+  document.getElementById('modalHistorialIncidencia').style.display = 'block';
 };
 
-window.onclick = function (event) {
-  if (event.target === document.getElementById('modalHistorial')) {
-    document.getElementById('modalHistorial').style.display = 'none';
+window.abrirModalCambioEstado = function(idx) {
+  const modal = document.getElementById('modalCambioEstado');
+  const select = document.getElementById('nuevoEstado');
+  modal.dataset.idx = idx;
+  select.value = '';
+  modal.style.display = 'block';
+};
+
+document.getElementById('cerrarModalCambioEstado').onclick = function () {
+  document.getElementById('modalCambioEstado').style.display = 'none';
+};
+
+document.getElementById('guardarCambioEstado').onclick = function () {
+  const idx = document.getElementById('modalCambioEstado').dataset.idx;
+  const nuevoEstado = document.getElementById('nuevoEstado').value;
+  if (!nuevoEstado) {
+    document.getElementById('msgCambioEstado').textContent = 'Selecciona un estado válido.';
+    return;
+  }
+  cambiarEstadoIncidencia(parseInt(idx), nuevoEstado);
+  document.getElementById('modalCambioEstado').style.display = 'none';
+  document.getElementById('msgCambioEstado').textContent = '';
+};
+
+window.cambiarEstadoIncidencia = function(idx, nuevoEstado) {
+  const incidencias = JSON.parse(localStorage.getItem('incidencias') || '[]');
+  const incidencia = incidencias[idx];
+  if (!incidencia) return;
+  if (nuevoEstado && nuevoEstado !== (incidencia.estado || 'Pendiente')) {
+    incidencia.estado = nuevoEstado;
+    localStorage.setItem('incidencias', JSON.stringify(incidencias));
+    let seguimientos = obtenerSeguimientoIncidencias();
+    const usuario = JSON.parse(localStorage.getItem('usuarioLogueado') || '{}');
+    seguimientos.push({
+      incidenciaId: idx,
+      nuevoEstado,
+      fecha: new Date().toISOString(),
+      responsable: usuario.nombre || 'Desconocido'
+    });
+    guardarSeguimientoIncidencias(seguimientos);
+    mostrarMensaje('Estado actualizado y seguimiento registrado.', 'success');
+    renderizarTablaCriticas();
+    // Actualiza la tabla de seguimiento si existe
+    if (document.getElementById('tablaSeguimientoIncidencias')) {
+      const tbody = document.getElementById('tablaSeguimientoIncidencias').querySelector('tbody');
+      tbody.innerHTML = '';
+      seguimientos.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${item.incidenciaId}</td><td>${item.nuevoEstado}</td><td>${new Date(item.fecha).toLocaleString()}</td><td>${item.responsable}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
   }
 };
 
-function cargarIncidenciasRegistradas() {
-  const incidenciasRegistradas = JSON.parse(localStorage.getItem('incidencias') || '[]');
-  const tbody = document.getElementById('tablaIncidenciasRegistradas').querySelector('tbody');
-  tbody.innerHTML = '';
-
-  incidenciasRegistradas.forEach((incidencia) => {
-    const fila = document.createElement('tr');
-    fila.innerHTML = `
-      <td>${incidencia.medico}</td>
-      <td>${incidencia.paciente}</td>
-      <td>${incidencia.edad || 'N/A'}</td>
-      <td>${incidencia.diagnostico || 'N/A'}</td>
-      <td>${incidencia.habitacion || 'N/A'}</td>
-      <td>${incidencia.fechaHora}</td>
-      <td>${incidencia.nivelUrgencia}</td>
-      <td>${incidencia.descripcion}</td>
-    `;
-    tbody.appendChild(fila);
-  });
+function mostrarMensaje(msg, tipo) {
+  let div = document.getElementById('msgGlobal');
+  if (!div) {
+    div = document.createElement('div');
+    div.id = 'msgGlobal';
+    div.className = 'msg-global';
+    document.body.appendChild(div);
+  }
+  div.textContent = msg;
+  div.className = 'msg-global ' + (tipo === 'success' ? 'msg-success' : 'msg-error');
+  div.style.display = 'block';
+  setTimeout(() => { div.style.display = 'none'; }, 2500);
 }
 
-function cargarIncidenciasCriticas() {
-  const incidenciasRegistradas = JSON.parse(localStorage.getItem('incidencias') || '[]');
-  const tbody = document.getElementById('tablaIncidenciasRegistradas').querySelector('tbody');
-  tbody.innerHTML = '';
+// Filtros
+document.getElementById('filtroEstado').addEventListener('change', function() {
+  renderizarTablaCriticas(this.value, document.getElementById('filtroPaciente').value);
+});
+document.getElementById('filtroPaciente').addEventListener('input', function() {
+  renderizarTablaCriticas(document.getElementById('filtroEstado').value, this.value);
+});
 
-  // Filtrar incidencias con nivel de urgencia "Crítico"
-  const incidenciasCriticas = incidenciasRegistradas.filter(incidencia => incidencia.nivelUrgencia.toLowerCase() === 'critico');
-
-  incidenciasCriticas.forEach((incidencia) => {
-    const fila = document.createElement('tr');
-    fila.innerHTML = `
-      <td>${incidencia.medico}</td>
-      <td>${incidencia.paciente}</td>
-      <td>${incidencia.edad || 'N/A'}</td>
-      <td>${incidencia.diagnostico || 'N/A'}</td>
-      <td>${incidencia.habitacion || 'N/A'}</td>
-      <td>${incidencia.fechaHora}</td>
-      <td>${incidencia.nivelUrgencia}</td>
-      <td>${incidencia.descripcion}</td>
-    `;
-    tbody.appendChild(fila);
-  });
-}
-
-// Llamar a las funciones para cargar las tablas
-cargarIncidenciasCriticas();
+// Inicialización
 renderizarTablaCriticas();

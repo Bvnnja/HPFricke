@@ -6,14 +6,24 @@
   <link rel="stylesheet" href="login.css">
 </head>
 <body>
-  <div class="login-container">
-    <h2>Iniciar Sesión</h2>
-    <form id="loginForm">
-      <input type="email" id="loginEmail" placeholder="Correo electrónico" required><br>
-      <input type="password" id="loginPassword" placeholder="Contraseña" required><br>
-      <button type="submit">Entrar</button>
-    </form>
-    <p>¿No tienes cuenta? <a href="../registro/registro.html">Regístrate</a></p>
+  <div class="center-wrapper">
+    <div class="login-container">
+      <h2>Iniciar Sesión</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
+        </div>
+        <div class="form-group">
+          <input type="password" id="loginPassword" placeholder="Contraseña" required>
+        </div>
+        <div class="form-group">
+          <button type="submit">Entrar</button>
+        </div>
+      </form>
+      <div class="form-links">
+        <a href="../registro/registro.html">¿No tienes cuenta? Regístrate</a>
+      </div>
+    </div>
   </div>
   <script src="login.js"></script>
 </body>

@@ -61,3 +61,38 @@ body {
   color: #607d8b;
   font-size: 14px;
 }
+#usuariosRegistrados {
+  margin-top: 30px;
+  text-align: left;
+}
+#usuariosRegistrados table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 15px;
+}
+#usuariosRegistrados th, #usuariosRegistrados td {
+  border: 1px solid #b0bec5;
+  padding: 8px 6px;
+  text-align: center;
+}
+#usuariosRegistrados th {
+  background: #e3f2fd;
+  color: #1976d2;
+  font-weight: 600;
+}
+#usuariosRegistrados td {
+  background: #f5fafd;
+}
+#usuariosRegistrados select {
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: 1px solid #b0bec5;
+  background: #fff;
+  font-size: 14px;
+}
+#usuariosRegistrados select:focus {
+  border: 1.5px solid #1976d2;
+  outline: none;
+  background: #e3f2fd;
+}

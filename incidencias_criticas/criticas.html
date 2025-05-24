@@ -13,30 +13,158 @@
   </header>
 
   <main>
-    <section class="incidencias-registradas">
+  <section style="margin-bottom:18px;">
+    <label for="filtroEstado">Filtrar por estado:</label>
+    <select id="filtroEstado">
+      <option value="">Todos</option>
+      <option value="Pendiente">Pendiente</option>
+      <option value="En proceso">En proceso</option>
+      <option value="Resuelto">Resuelto</option>
+    </select>
+    <input type="text" id="filtroPaciente" placeholder="Buscar por paciente..." style="margin-left:12px;">
+  </section>
+  <section class="incidencias-registradas">
+    <table id="tablaIncidenciasRegistradas">
+      <thead>
+        <tr>
+          <th>Médico</th>
+          <th>Paciente</th>
+          <th>Edad</th>
+          <th>Diagnóstico</th>
+          <th>Habitación</th>
+          <th>Fecha y Hora</th>
+          <th>Nivel de Urgencia</th>
+          <th>Descripción</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Se llenará con JS -->
+      </tbody>
+    </table>
+  </section>
+  <section>
+    <h2>Seguimiento de Incidencias Críticas</h2>
+    <table id="tablaSeguimientoIncidencias">
+      <thead>
+        <tr>
+          <th>ID Incidencia</th>
+          <th>Nuevo Estado</th>
+          <th>Fecha</th>
+          <th>Responsable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Se llena con JS -->
+      </tbody>
+    </table>
+  </section>
+</main>
 
-      <table id="tablaIncidenciasRegistradas">
-        <thead>
-          <tr>
-            <th>Médico</th>
-            <th>Paciente</th>
-            <th>Edad</th>
-            <th>Diagnóstico</th>
-            <th>Habitación</th>
-            <th>Fecha y Hora</th>
-            <th>Nivel de Urgencia</th>
-            <th>Descripción</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Se llenará con JS -->
-        </tbody>
-      </table>
-    </section>
+<!-- Modal para historial de cambios de estado -->
+<div id="modalHistorialIncidencia" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close" id="cerrarModalHistorial">&times;</span>
+    <h3>Historial de Cambios de Estado</h3>
+    <ul id="listaHistorialIncidencia"></ul>
+  </div>
+</div>
 
-  </main>
+<!-- Modal para cambio de estado -->
+<div id="modalCambioEstado" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close" id="cerrarModalCambioEstado">&times;</span>
+    <h3>Cambiar Estado de Incidencia</h3>
+    <select id="nuevoEstado" style="width:100%;margin-bottom:12px;">
+      <option value="">Selecciona nuevo estado</option>
+      <option value="Pendiente">Pendiente</option>
+      <option value="En proceso">En proceso</option>
+      <option value="Resuelto">Resuelto</option>
+    </select>
+    <div id="msgCambioEstado" style="color:#d32f2f;font-size:15px;margin-bottom:8px;"></div>
+    <button id="guardarCambioEstado" class="btn btn-cambiar" style="width:100%;">Guardar</button>
+  </div>
+</div>
 
-  
-  <script src="criticas.js"></script>
+<script src="criticas.js"></script>
+<script>
+  // Mostrar seguimiento de incidencias críticas (HU-14)
+  const seguimiento = JSON.parse(localStorage.getItem('seguimientoIncidencias') || '[]');
+  const tbody = document.getElementById('tablaSeguimientoIncidencias').querySelector('tbody');
+  seguimiento.forEach(item => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${item.incidenciaId}</td><td>${item.nuevoEstado}</td><td>${new Date(item.fecha).toLocaleString()}</td><td>${item.responsable}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Modal historial de incidencia
+  document.getElementById('cerrarModalHistorial').onclick = function () {
+    document.getElementById('modalHistorialIncidencia').style.display = 'none';
+  };
+  window.onclick = function (event) {
+    if (event.target === document.getElementById('modalHistorialIncidencia')) {
+      document.getElementById('modalHistorialIncidencia').style.display = 'none';
+    }
+  };
+
+  // Filtrar incidencias por estado y paciente
+  document.getElementById('filtroEstado').addEventListener('change', filtrarIncidencias);
+  document.getElementById('filtroPaciente').addEventListener('input', filtrarIncidencias);
+
+  function filtrarIncidencias() {
+    const estado = document.getElementById('filtroEstado').value;
+    const paciente = document.getElementById('filtroPaciente').value.toLowerCase();
+    const filas = document.querySelectorAll('#tablaIncidenciasRegistradas tbody tr');
+
+    filas.forEach(fila => {
+      const celdaEstado = fila.querySelector('td:nth-child(7)').textContent;
+      const celdaPaciente = fila.querySelector('td:nth-child(2)').textContent.toLowerCase();
+      const coincideEstado = estado === '' || celdaEstado === estado;
+      const coincidePaciente = celdaPaciente.includes(paciente);
+
+      if (coincideEstado && coincidePaciente) {
+        fila.style.display = '';
+      } else {
+        fila.style.display = 'none';
+      }
+    });
+  }
+
+  // Cambiar estado de incidencia
+  let incidenciaSeleccionada;
+  document.getElementById('tablaIncidenciasRegistradas').addEventListener('click', function (event) {
+    if (event.target.classList.contains('btn-cambiar-estado')) {
+      incidenciaSeleccionada = event.target.closest('tr').querySelector('td:nth-child(1)').textContent;
+      document.getElementById('modalCambioEstado').style.display = 'block';
+    }
+  });
+
+  document.getElementById('cerrarModalCambioEstado').onclick = function () {
+    document.getElementById('modalCambioEstado').style.display = 'none';
+  };
+
+  document.getElementById('guardarCambioEstado').onclick = function () {
+    const nuevoEstado = document.getElementById('nuevoEstado').value;
+    if (!nuevoEstado) {
+      document.getElementById('msgCambioEstado').textContent = 'Debes seleccionar un nuevo estado.';
+      return;
+    }
+
+    const incidencias = JSON.parse(localStorage.getItem('seguimientoIncidencias') || '[]');
+    const incidencia = incidencias.find(inc => inc.incidenciaId === incidenciaSeleccionada);
+    if (incidencia) {
+      incidencia.nuevoEstado = nuevoEstado;
+      incidencia.fecha = new Date().toISOString();
+      incidencia.responsable = 'Usuario Actual'; // Cambiar por el usuario real
+
+      localStorage.setItem('seguimientoIncidencias', JSON.stringify(incidencias));
+      document.getElementById('msgCambioEstado').textContent = 'Estado cambiado con éxito.';
+      setTimeout(() => {
+        document.getElementById('modalCambioEstado').style.display = 'none';
+        location.reload();
+      }, 1500);
+    }
+  };
+</script>
 </body>
 </html>

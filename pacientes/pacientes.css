@@ -1,110 +1,298 @@
-/* General */
+/* Fondo general hospitalario */
 body {
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
+  background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* Contenedor principal */
+main {
+  max-width: 1100px;
+  margin: 50px auto 0 auto;
+  padding: 32px 28px 24px 28px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(33, 150, 243, 0.10), 0 1.5px 8px rgba(0,0,0,0.04);
+  border-top: 8px solid #1976d2;
+  text-align: center;
+}
+
+/* Título principal */
+main h1 {
+  color: #1976d2;
+  margin-bottom: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* Mejora visual para la tabla de pacientes */
+#tablaPacientes {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 18px;
+  background: #f5fafd;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(33,150,243,0.10);
+}
+
+#tablaPacientes th, #tablaPacientes td {
+  border: none;
+  padding: 13px 10px;
+  text-align: center;
+  font-size: 16px;
+}
+
+#tablaPacientes th {
+  background: #e3f2fd;
+  color: #1976d2;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #b0bec5;
+}
+
+#tablaPacientes td {
+  background: transparent;
+  font-size: 16px;
+}
+
+/* Fila según estado (colores intermedios, solo la primera barra vertical coloreada) */
+#tablaPacientes tbody tr.realizado {
+  background: #c8e6c9 !important; /* Verde intermedio */
+}
+#tablaPacientes tbody tr.pendiente {
+  background: #fff9c4 !important; /* Amarillo intermedio */
+}
+#tablaPacientes tbody tr.critico {
+  background: #ffcdd2 !important; /* Rojo intermedio */
+}
+
+#tablaPacientes tbody tr.realizado td:first-child {
+  border-left: 7px solid #388e3c !important; /* Verde oscuro */
+}
+#tablaPacientes tbody tr.pendiente td:first-child {
+  border-left: 7px solid #ffb300 !important; /* Amarillo oscuro */
+}
+#tablaPacientes tbody tr.critico td:first-child {
+  border-left: 7px solid #d32f2f !important; /* Rojo oscuro */
+}
+
+#tablaPacientes tbody tr td:not(:first-child) {
+  border-left: none !important;
+}
+
+/* Hover mantiene color de estado en toda la fila */
+#tablaPacientes tbody tr.realizado:hover,
+#tablaPacientes tbody tr.realizado:hover td {
+  background: #a5d6a7 !important;
+}
+#tablaPacientes tbody tr.pendiente:hover,
+#tablaPacientes tbody tr.pendiente:hover td {
+  background: #ffe082 !important;
+}
+#tablaPacientes tbody tr.critico:hover,
+#tablaPacientes tbody tr.critico:hover td {
+  background: #ef9a9a !important;
+  border-color: #d32f2f !important;
+}
+
+/* Botones y selects de la tabla */
+#tablaPacientes button,
+#tablaPacientes select {
+  padding: 7px 14px;
+  border-radius: 6px;
+  border: 1px solid #b0bec5;
+  background: #e3f2fd;
+  color: #1976d2;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+#tablaPacientes button:hover,
+#tablaPacientes select:hover {
+  background: #1976d2;
+  color: #fff;
+}
+
+/* Selects de configuración */
+#tablaPacientes select.configurar-horas,
+#tablaPacientes select.configurar-minutos {
+  width: 55px;
+  margin: 0 2px;
+  background: #f5fafd;
+  color: #1976d2;
+  border: 1px solid #b0bec5;
+  font-size: 15px;
+  border-radius: 4px;
+  padding: 4px 6px;
+}
+#tablaPacientes select.configurar-horas:focus,
+#tablaPacientes select.configurar-minutos:focus {
+  outline: 2px solid #1976d2;
+}
+
+/* Encabezado de sección */
+section {
+  margin-bottom: 24px;
+}
+
+/* Notificaciones críticas (dashboard y modal navbar) */
+.noti-critica-li {
+  background: #fff0f0;
+  border: 1.5px solid #d32f2f;
+  border-radius: 7px;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(211,47,47,0.07);
+  transition: background 0.2s, border 0.2s;
+  color: #b71c1c;
+}
+.noti-critica-li:hover {
+  background: #ffeaea;
+  border-color: #b71c1c;
+}
+.noti-critica-estado {
+  color: #fff;
+  background: #d32f2f;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 15px;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+/* Fondo y borde del modal de notificaciones críticas */
+#modal-notificaciones-criticas {
+  background: #fff3cd !important;
+  border: 2px solid #ff9800 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 2px 8px rgba(255,193,7,0.18) !important;
+  max-width: 340px;
+  width: 90vw;
+  padding: 18px 16px;
+}
+
+/* Título del modal */
+#modal-notificaciones-criticas h3 {
+  color: #d32f2f;
+  font-size: 20px;
   margin: 0;
 }
 
-h1 {
-  text-align: center;
-  color: #1976d2;
-  margin-bottom: 20px;
-}
-
-/* Tabla de pacientes */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #fff;
+/* Formulario de configuración de notificaciones críticas */
+#form-configuracion-alerta {
+  background: #fffbe7;
   border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 12px 10px 10px 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
-
-thead {
-  background: #1976d2;
-  color: #fff;
+#form-configuracion-alerta label {
+  color: #d32f2f;
+  font-weight: 500;
 }
-
-th, td {
-  padding: 12px 15px;
-  text-align: center;
-  border: 1px solid #ddd;
-}
-
-tr.realizado {
-  background-color: #d4edda; /* Verde claro */
-}
-
-tr.pendiente {
-  background-color: #fff3cd; /* Amarillo claro */
-}
-
-tr.critico {
-  background-color: #f8d7da; /* Rojo claro */
-}
-
-tr:nth-child(even) {
-  background: #f9f9f9;
-}
-
-tr:hover {
-  background: #e3f2fd;
-}
-
-/* Temporizador */
-span[id^="temporizador-"] {
-  font-weight: bold;
-  color: #333;
-}
-
-/* Selectores de tiempo */
-select {
-  padding: 5px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background: #fff;
+#form-configuracion-alerta input[type="color"] {
+  border: none;
+  background: none;
+  width: 40px;
+  height: 30px;
   cursor: pointer;
+  box-shadow: 0 0 2px #888;
+  margin-left: 4px;
 }
-
-select:focus {
-  outline: none;
-  border-color: #1976d2;
-}
-
-/* Botones */
-button {
-  padding: 8px 12px;
+#form-configuracion-alerta button[type="submit"] {
   background: #1976d2;
   color: #fff;
   border: none;
+  padding: 6px 18px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
-  transition: background 0.3s;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+#form-configuracion-alerta button[type="submit"]:hover {
+  background: #1251a3;
+}
+#form-configuracion-alerta button[type="button"] {
+  background: #b0bec5;
+  color: #263238;
+  border: none;
+  padding: 6px 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+#form-configuracion-alerta button[type="button"]:hover {
+  background: #90a4ae;
 }
 
-button:hover {
-  background: #1565c0;
+/* Botones generales */
+.btn, .btn-volver, .btn-paciente, .btn-sec {
+  display: inline-block;
+  padding: 12px 28px;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(33,150,243,0.08);
+  margin: 0 8px 12px 0;
+}
+.btn:hover, .btn-volver:hover, .btn-paciente:hover, .btn-sec:hover {
+  background: #1251a3;
+}
+.btn-volver {
+  background: #b0bec5;
+  color: #263238;
+}
+.btn-volver:hover {
+  background: #90a4ae;
+}
+.btn-paciente {
+  background: #ffb300;
+  color: #263238;
+}
+.btn-paciente:hover {
+  background: #ffa000;
+  color: #fff;
+}
+.btn-sec {
+  background: #388e3c;
+}
+.btn-sec:hover {
+  background: #2e7031;
 }
 
-/* Responsividad */
-@media (max-width: 768px) {
-  table {
-    font-size: 12px;
+/* Responsive */
+@media (max-width: 900px) {
+  main {
+    padding: 18px 4vw;
   }
-
-  th, td {
-    padding: 8px;
+  #tablaPacientes th, #tablaPacientes td {
+    font-size: 14px;
+    padding: 7px 3px;
   }
-
-  select {
-    font-size: 12px;
+}
+@media (max-width: 600px) {
+  main {
+    padding: 8px 2vw;
   }
-
-  button {
-    font-size: 12px;
-    padding: 6px 10px;
+  #tablaPacientes th, #tablaPacientes td {
+    font-size: 13px;
+    padding: 5px 2px;
+  }
+  .btn, .btn-volver, .btn-paciente, .btn-sec {
+    padding: 9px 12px;
+    font-size: 14px;
   }
 }
