@@ -4,94 +4,151 @@ body {
   margin: 0;
   min-height: 100vh;
 }
-.editar-container {
+.paciente-container {
   max-width: 700px;
   margin: 60px auto;
-  padding: 32px 28px 24px 28px;
-  border-radius: 14px;
+  padding: 36px 32px 28px 32px;
+  border-radius: 16px;
   background: #fff;
   box-shadow: 0 4px 24px rgba(33, 150, 243, 0.10), 0 1.5px 8px rgba(0,0,0,0.04);
-  border-top: 8px solid #1976d2;
+  border-top: 10px solid #1976d2;
   text-align: center;
 }
-.editar-container h1 {
+.paciente-container h1 {
   color: #1976d2;
   margin-bottom: 18px;
   font-weight: 700;
+  letter-spacing: 1px;
 }
-#tablaPacientes {
+#editarPacienteForm {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 18px 24px;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 22px;
+  background: #f5fafd;
+  border-radius: 14px;
+  padding: 28px 18px 18px 18px;
+  box-shadow: 0 2px 12px #e3f2fd;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+}
+#editarPacienteForm input,
+#editarPacienteForm select {
   width: 100%;
-  border-collapse: collapse;
+  min-width: 0;
+  font-size: 16px;
+  flex: 1 1 45%;
+}
+#editarPacienteForm textarea {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin-top: 2px;
+  font-size: 16px;
+  flex: 1 1 100%;
+}
+#editarPacienteForm button[type="submit"],
+#editarPacienteForm button[type="button"] {
+  width: 48%;
   margin-top: 10px;
-}
-#tablaPacientes th, #tablaPacientes td {
-  border: 1px solid #b0bec5;
-  padding: 8px 6px;
-  text-align: center;
-}
-#tablaPacientes th {
-  background: #e3f2fd;
-  color: #1976d2;
+  padding: 12px 0;
+  font-size: 16px;
   font-weight: 600;
-}
-#tablaPacientes td {
-  background: #f5fafd;
-}
-#tablaPacientes button {
-  padding: 5px 12px;
-  background: #388e3c;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-#tablaPacientes button:hover {
-  background: #2e7031;
-}
-#formEditar {
-  background: #f5fafd;
+  letter-spacing: 0.5px;
   border-radius: 8px;
-  padding: 18px;
-  box-shadow: 0 2px 8px rgba(33,150,243,0.06);
-  margin-top: 24px;
-  display: inline-block;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(33,150,243,0.10);
+  margin-left: 0;
+  margin-right: 0;
 }
-#editarPacienteForm input {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #b0bec5;
-  background: #fff;
-  font-size: 15px;
-  width: 180px;
-  margin: 6px;
-  transition: border 0.2s;
-}
-#editarPacienteForm input:focus {
-  border: 1.5px solid #1976d2;
-  outline: none;
-  background: #e3f2fd;
-}
-#editarPacienteForm button {
-  padding: 10px 18px;
+
+#editarPacienteForm button[type="submit"] {
   background: #1976d2;
   color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-  margin: 6px;
+  margin-left: auto;
+  margin-right: 0;
+  order: 2;
 }
+
 #editarPacienteForm button[type="button"] {
   background: #b0bec5;
   color: #263238;
+  margin-right: auto;
+  margin-left: 0;
+  box-shadow: 0 2px 8px #b0bec5;
+  order: 1;
+}
+#editarPacienteForm button[type="submit"]:hover {
+  background: #1565c0;
+  box-shadow: 0 4px 16px #e3f2fd;
 }
 #editarPacienteForm button[type="button"]:hover {
   background: #90a4ae;
+  color: #fff;
+  box-shadow: 0 4px 16px #e3f2fd;
 }
-#editarPacienteForm button:hover {
-  background: #1565c0;
+#editarPacienteForm input,
+#editarPacienteForm select,
+#editarPacienteForm textarea {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1.5px solid #b0bec5;
+  background: #f5fafd;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  resize: none;
+}
+#editarPacienteForm input:focus,
+#editarPacienteForm select:focus,
+#editarPacienteForm textarea:focus {
+  border: 1.5px solid #1976d2;
+  outline: none;
+  background: #e3f2fd;
+  box-shadow: 0 2px 8px #e3f2fd;
+}
+#editarPacienteForm label {
+  font-weight: 500;
+  color: #1976d2;
+  margin-bottom: 2px;
+  display: block;
+  font-size: 15px;
+}
+#editarPacienteForm button {
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+@media (max-width: 900px) {
+  #editarPacienteForm {
+    flex-direction: column;
+    gap: 14px 0;
+    padding: 14px 4vw;
+    max-width: 98vw;
+    align-items: stretch;
+  }
+  #editarPacienteForm button[type="submit"],
+  #editarPacienteForm button[type="button"] {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    order: unset;
+  }
+}
+@media (max-width: 900px) {
+  .paciente-container {
+    padding: 18px 4vw;
+  }
+}
+@media (max-width: 600px) {
+  .paciente-container {
+    padding: 8px 2vw;
+  }
 }

@@ -136,12 +136,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function actualizarEstadoCambioPostural(index, estado) {
     const pacientes = JSON.parse(localStorage.getItem('pacientes') || '[]');
+    const usuario = JSON.parse(localStorage.getItem('usuarioLogueado') || '{}');
     pacientes[index].cambioPostural = estado;
 
+    // Reinicia el temporizador y registra el médico si es "realizado"
     if (estado === 'realizado') {
       pacientes[index].tiempoRestante = (pacientes[index].horas * 3600) + (pacientes[index].minutos * 60); // Reinicia el temporizador
-      pacientes[index].medico = medicoLogueado; // Registra el médico que realizó el cambio
+      pacientes[index].medico = usuario.nombre || 'Desconocido';
     }
+
+    // Guardar en historial con fecha/hora actual y nombre exacto del paciente
+    guardarHistorialCambioPostural({
+      paciente: pacientes[index].nombre.trim(),
+      fechaHora: new Date().toISOString(),
+      estado: estado, // Registra cualquier estado, incluido "critico"
+      responsable: pacientes[index].medico || usuario.nombre || 'Desconocido',
+      postura: pacientes[index].postura || pacientes[index].cambioPostural
+    });
 
     localStorage.setItem('pacientes', JSON.stringify(pacientes));
     cargarPacientes();
@@ -159,30 +170,67 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarPacientes();
   }
 
-  function iniciarTemporizadores() {
-    const pacientes = JSON.parse(localStorage.getItem('pacientes') || '[]');
+  function guardarHistorialCambioPostural({ paciente, fechaHora, estado, responsable, postura }) {
+    let historial = JSON.parse(localStorage.getItem('historialCambios') || '[]');
+    historial.push({
+      paciente: paciente.trim(), // Asegura que no haya espacios extra
+      fechaHora,
+      estado,
+      responsable,
+      postura
+    });
+    localStorage.setItem('historialCambios', JSON.stringify(historial));
+  }
 
+  // Ejemplo de uso cuando se realiza un cambio postural desde la UI:
+  function marcarCambioPostural(idx, nuevoEstado, nuevaPostura) {
+    const pacientes = obtenerPacientes();
+    const usuario = JSON.parse(localStorage.getItem('usuarioLogueado') || '{}');
+    pacientes[idx].cambioPostural = nuevoEstado;
+    if (nuevaPostura) pacientes[idx].postura = nuevaPostura;
+    guardarPacientes(pacientes);
+
+    // Guardar en historial con postura
+    guardarHistorialCambioPostural({
+      paciente: pacientes[idx].nombre,
+      fechaHora: new Date().toLocaleString(),
+      estado: nuevoEstado,
+      responsable: usuario.nombre || 'Desconocido',
+      postura: nuevaPostura || pacientes[idx].postura || pacientes[idx].cambioPostural
+    });
+
+    // ...actualiza la UI, muestra mensaje, etc...
+  }
+
+  function iniciarTemporizadores() {
     // Limpia todos los temporizadores previos para evitar múltiples intervalos por paciente
     Object.values(temporizadores).forEach(intervalId => clearInterval(intervalId));
     temporizadores = {};
 
-    pacientes.forEach((paciente, index) => {
-      if (!paciente.tiempoRestante) {
-        paciente.tiempoRestante = (paciente.horas * 3600) + (paciente.minutos * 60) || 3600; // 1 hora por defecto
-      }
+    let pacientes = JSON.parse(localStorage.getItem('pacientes') || '[]');
 
-      // Inicializa bandera de alerta si no existe
+    pacientes.forEach((paciente, index) => {
+      // Asegura que tiempoRestante sea un número válido
+      if (typeof paciente.tiempoRestante !== 'number' || isNaN(paciente.tiempoRestante)) {
+        paciente.tiempoRestante = (paciente.horas * 3600) + (paciente.minutos * 60) || 3600;
+      }
       if (typeof paciente.alertaMostrada === 'undefined') {
         paciente.alertaMostrada = false;
       }
 
       temporizadores[index] = setInterval(() => {
-        // Vuelve a cargar los pacientes para mantener sincronía
+        // Recarga el array de pacientes para mantener sincronía
         let pacientesActualizados = JSON.parse(localStorage.getItem('pacientes') || '[]');
         let pacienteActual = pacientesActualizados[index];
         if (!pacienteActual) return;
 
-        pacienteActual.tiempoRestante--;
+        // Si está en realizado, sigue decrementando el temporizador normalmente
+        if (pacienteActual.cambioPostural === 'realizado') {
+          pacienteActual.tiempoRestante--;
+        } else {
+          // Siempre decrementa, incluso si es negativo
+          pacienteActual.tiempoRestante--;
+        }
 
         // Actualiza solo el temporizador en el DOM, no recarga toda la tabla
         const temporizadorDisplay = document.getElementById(`temporizador-${index}`);
@@ -191,9 +239,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // ALERTA AUTOMÁTICA (con personalización)
+        const config = getConfigUsuario();
         if ((pacienteActual.tiempoRestante <= 0) && !pacienteActual.alertaMostrada) {
           pacienteActual.alertaMostrada = true;
-          // Mensaje personalizado global si existe
           const mensajePersonalizado = config.mensaje;
           const mensaje = mensajePersonalizado && mensajePersonalizado.trim().length > 0
             ? mensajePersonalizado
@@ -202,18 +250,22 @@ document.addEventListener('DOMContentLoaded', () => {
           reproducirAlertaSonoraPersonalizada();
         }
 
+        // Cambia a pendiente en 0, y a crítico en negativo
         if (pacienteActual.tiempoRestante === 0) {
           pacienteActual.cambioPostural = 'pendiente';
-        } else if (pacienteActual.tiempoRestante < -10) {
+        }
+        if (pacienteActual.tiempoRestante < 0) {
           pacienteActual.cambioPostural = 'critico';
         }
 
-        // Reinicia la alerta cuando se realiza el cambio postural
-        if (pacienteActual.cambioPostural === 'realizado') {
+        // Si el usuario selecciona "realizado", reinicia el temporizador y la alerta
+        if (pacienteActual.cambioPostural === 'realizado' && pacienteActual.tiempoRestante <= 0) {
+          pacienteActual.tiempoRestante = (pacienteActual.horas * 3600) + (pacienteActual.minutos * 60) || 3600;
           pacienteActual.alertaMostrada = false;
         }
 
         // Guarda y actualiza solo si hay cambios relevantes
+        pacientesActualizados[index] = pacienteActual;
         localStorage.setItem('pacientes', JSON.stringify(pacientesActualizados));
 
         // Si el estado cambió, recarga la tabla para actualizar colores y lógica
@@ -230,6 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   cargarPacientes();
+  iniciarTemporizadores();
 
   // Notificación visual personalizada si la URL contiene 192.168.1.95:500
   if (window.location.href.includes('192.168.1.95:500')) {

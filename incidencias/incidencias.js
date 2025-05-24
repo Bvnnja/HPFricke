@@ -39,8 +39,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function mostrarMensajeIncidencia(msg, tipo) {
+    const div = document.getElementById('msgIncidencia');
+    div.textContent = msg;
+    div.className = 'msg-global ' + (tipo === 'success' ? 'msg-success' : 'msg-error');
+    div.style.display = 'block';
+    setTimeout(() => { div.style.display = 'none'; }, 2500);
+  }
+
   // Mostrar incidencias en la lista
-  function mostrarIncidencias() {
+  function mostrarIncidencias(filtroUrgencia = '', filtroPaciente = '') {
     const incidencias = obtenerIncidencias();
     listaIncidencias.innerHTML = `
       <thead>
@@ -59,23 +67,42 @@ document.addEventListener('DOMContentLoaded', () => {
       <tbody>
         ${incidencias
           .map(
-            (incidencia, index) => `
-          <tr>
-            <td>${incidencia.medico}</td>
-            <td>${incidencia.paciente}</td>
-            <td>${incidencia.edad || 'N/A'}</td>
-            <td>${incidencia.diagnostico || 'N/A'}</td>
-            <td>${incidencia.habitacion || 'N/A'}</td>
-            <td>${incidencia.fechaHora}</td>
-            <td>${incidencia.nivelUrgencia}</td>
-            <td>${incidencia.descripcion}</td>
-            <td><button onclick="eliminarIncidencia(${index})">Eliminar</button></td>
-          </tr>
-        `
+            (incidencia, index) => {
+              if ((filtroUrgencia && incidencia.nivelUrgencia !== filtroUrgencia) ||
+                  (filtroPaciente && !incidencia.paciente.toLowerCase().includes(filtroPaciente.toLowerCase()))) {
+                return '';
+              }
+              let badgeClass = 'badge-urgencia badge-' + (incidencia.nivelUrgencia || '').toLowerCase();
+              return `
+              <tr>
+                <td>${incidencia.medico}</td>
+                <td>${incidencia.paciente}</td>
+                <td>${incidencia.edad || 'N/A'}</td>
+                <td>${incidencia.diagnostico || 'N/A'}</td>
+                <td>${incidencia.habitacion || 'N/A'}</td>
+                <td>${incidencia.fechaHora}</td>
+                <td><span class="${badgeClass}">${incidencia.nivelUrgencia}</span></td>
+                <td>${incidencia.descripcion}</td>
+                <td><button onclick="eliminarIncidencia(${index})">Eliminar</button></td>
+              </tr>
+            `;
+            }
           )
           .join('')}
       </tbody>
     `;
+  }
+
+  // Guardar en historial de cambios posturales (HU-12)
+  function guardarHistorialCambio({ paciente, fechaHora, nivelUrgencia, medico }) {
+    let historial = JSON.parse(localStorage.getItem('historialCambios') || '[]');
+    historial.push({
+      paciente,
+      fechaHora,
+      estado: nivelUrgencia === 'critico' ? 'critico' : 'registrado',
+      responsable: medico
+    });
+    localStorage.setItem('historialCambios', JSON.stringify(historial));
   }
 
   // Registrar nueva incidencia
@@ -92,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const descripcion = document.getElementById('descripcion').value.trim();
 
     if (!medico || !paciente || !fechaHora || !nivelUrgencia || !descripcion) {
-      alert('Por favor, completa todos los campos.');
+      mostrarMensajeIncidencia('Por favor, completa todos los campos.', 'error');
       return;
     }
 
@@ -101,9 +128,23 @@ document.addEventListener('DOMContentLoaded', () => {
     incidencias.push(nuevaIncidencia);
     guardarIncidencias(incidencias);
 
+    guardarHistorialCambio({ paciente, fechaHora, nivelUrgencia, medico });
+
+    if (nivelUrgencia.toLowerCase() === 'critico') {
+      let notis = JSON.parse(localStorage.getItem('notificaciones') || '[]');
+      notis.push({
+        tipo: 'incidencia_critica',
+        mensaje: `Incidencia crítica registrada para ${paciente}: ${descripcion}`,
+        fecha: new Date().toISOString()
+      });
+      localStorage.setItem('notificaciones', JSON.stringify(notis));
+      mostrarMensajeIncidencia('¡Incidencia crítica! Se notificó a los médicos responsables.', 'success');
+    } else {
+      mostrarMensajeIncidencia('Incidencia registrada correctamente.', 'success');
+    }
+
     formIncidencias.reset();
     mostrarIncidencias();
-    alert('Incidencia registrada correctamente.');
   });
 
   // Eliminar incidencia
@@ -112,8 +153,16 @@ document.addEventListener('DOMContentLoaded', () => {
     incidencias.splice(index, 1);
     guardarIncidencias(incidencias);
     mostrarIncidencias();
-    alert('Incidencia eliminada correctamente.');
+    mostrarMensajeIncidencia('Incidencia eliminada correctamente.', 'success');
   };
+
+  // Filtros
+  document.getElementById('filtroUrgencia').addEventListener('change', function() {
+    mostrarIncidencias(this.value, document.getElementById('filtroPacienteInc').value);
+  });
+  document.getElementById('filtroPacienteInc').addEventListener('input', function() {
+    mostrarIncidencias(document.getElementById('filtroUrgencia').value, this.value);
+  });
 
   // Inicializar
   medicoInput.value = obtenerMedicoLogueado();

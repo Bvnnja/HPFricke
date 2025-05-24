@@ -33,29 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
     editIndex = null;
   }
 
-  function mostrarPacientes() {
-    const pacientes = obtenerPacientes();
-    const tbody = document.getElementById('tablaPacientes').querySelector('tbody');
-    tbody.innerHTML = '';
-    pacientes.forEach((p, idx) => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${p.nombre}</td>
-        <td>${p.rut || ''}</td>
-        <td>${p.edad}</td>
-        <td>${p.sexo || ''}</td>
-        <td>${p.diagnostico}</td>
-        <td>${p.habitacion}</td>
-        <td>${p.fechaIngreso || ''}</td>
-        <td>${p.observaciones || ''}</td>
-        <td>
-          <button type="button" onclick="editarPaciente(${idx})">Editar</button>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
-
   document.getElementById('pacienteForm').addEventListener('submit', function(e) {
     e.preventDefault();
     // Validaciones personalizadas
@@ -227,31 +204,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     guardarPacientes(pacientes);
-    limpiarFormulario();
-    mostrarPacientes();
+    // Redirige a la nueva página
+    window.location.href = '../pacientes-registrados/pacientes-registrados.html';
   });
-
-  window.editarPaciente = function(idx) {
-    const pacientes = obtenerPacientes();
-    const p = pacientes[idx];
-    document.getElementById('nombre').value = p.nombre;
-    document.getElementById('rut').value = p.rut || '';
-    document.getElementById('edad').value = p.edad;
-    document.getElementById('sexo').value = p.sexo || '';
-    document.getElementById('diagnostico').value = p.diagnostico;
-    document.getElementById('habitacion').value = p.habitacion;
-    document.getElementById('fechaIngreso').value = p.fechaIngreso || '';
-    document.getElementById('observaciones').value = p.observaciones || '';
-    document.getElementById('guardarBtn').textContent = 'Guardar Cambios';
-    document.getElementById('cancelarBtn').style.display = 'inline-block';
-    editIndex = idx;
-  };
 
   document.getElementById('cancelarBtn').addEventListener('click', function() {
     limpiarFormulario();
   });
-
-  mostrarPacientes();
 
   // Solo permitir letras y espacios en el input de nombre
   document.getElementById('nombre').addEventListener('input', function(e) {

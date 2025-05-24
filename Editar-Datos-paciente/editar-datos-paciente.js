@@ -19,10 +19,14 @@ function cargarDatosPaciente() {
     const pacientes = obtenerPacientes();
     const paciente = pacientes[editIndex];
     if (paciente) {
-      document.getElementById('editNombre').value = paciente.nombre;
-      document.getElementById('editEdad').value = paciente.edad;
-      document.getElementById('editDiagnostico').value = paciente.diagnostico;
-      document.getElementById('editHabitacion').value = paciente.habitacion;
+      document.getElementById('editNombre').value = paciente.nombre || '';
+      document.getElementById('editRut').value = paciente.rut || '';
+      document.getElementById('editEdad').value = paciente.edad || '';
+      document.getElementById('editDiagnostico').value = paciente.diagnostico || '';
+      document.getElementById('editHabitacion').value = paciente.habitacion || '';
+      if (document.getElementById('editSexo')) document.getElementById('editSexo').value = paciente.sexo || '';
+      if (document.getElementById('editFechaIngreso')) document.getElementById('editFechaIngreso').value = paciente.fechaIngreso || '';
+      if (document.getElementById('editObservaciones')) document.getElementById('editObservaciones').value = paciente.observaciones || '';
     }
   }
 }

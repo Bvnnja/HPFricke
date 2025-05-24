@@ -48,6 +48,19 @@
         <a href="#" id="cerrarSesion">Cerrar Sesión</a>
       </div>
     </div>
+    <!-- Notificaciones internas HU-15 -->
+    <div id="notificaciones-internas" style="margin-left:18px;">
+      <button onclick="document.getElementById('modal-notificaciones-internas').style.display='block';" style="background:none;border:none;font-size:20px;cursor:pointer;" title="Notificaciones internas">📩</button>
+      <div id="modal-notificaciones-internas" style="display:none;position:fixed;top:80px;right:30px;z-index:9999;background:#e3f2fd;border:2px solid #1976d2;border-radius:10px;box-shadow:0 2px 8px rgba(33,150,243,0.18);max-width:340px;width:90vw;padding:18px 16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3 style="color:#1976d2;font-size:20px;margin:0;">Notificaciones Internas</h3>
+          <button onclick="document.getElementById('modal-notificaciones-internas').style.display='none';" style="background:none;border:none;font-size:20px;cursor:pointer;color:#111;">✖</button>
+        </div>
+        <ul id="lista-notificaciones-internas" style="list-style:none;padding:0;margin:14px 0 0 0;max-height:300px;overflow-y:auto;">
+          <!-- Se llena con JS -->
+        </ul>
+      </div>
+    </div>
   </div>
 </nav>
 <script>

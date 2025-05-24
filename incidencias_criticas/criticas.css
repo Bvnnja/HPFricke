@@ -58,6 +58,37 @@ th {
   background-color: #d18b06;
 }
 
+/* Badges */
+.badge-estado {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #fff;
+  display: inline-block;
+}
+.badge-pendiente { background: #fca311; }
+.badge-en\ proceso { background: #1976d2; }
+.badge-resuelto { background: #388e3c; }
+
+/* Mensajes globales */
+.msg-global {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  padding: 16px 32px;
+  border-radius: 10px;
+  font-size: 17px;
+  font-weight: 600;
+  box-shadow: 0 2px 12px rgba(33,150,243,0.13);
+  display: none;
+  text-align: center;
+}
+.msg-success { background: #e8f5e9; color: #388e3c; border: 2px solid #388e3c; }
+.msg-error { background: #ffebee; color: #d32f2f; border: 2px solid #d32f2f; }
+
 /* Modal */
 .modal {
   display: none;
@@ -70,6 +101,7 @@ th {
   height: 100%;
   overflow: auto;
   background-color: rgba(0,0,0,0.5);
+  animation: modalFadeIn 0.3s;
 }
 
 .modal-content {
@@ -89,4 +121,9 @@ th {
 
 .close:hover {
   color: red;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-40px);}
+  to { opacity: 1; transform: translateY(0);}
 }
