@@ -295,4 +295,24 @@ function enviarNotificacionInterna(mensaje, para) {
   localStorage.setItem('notificaciones', JSON.stringify(notis));
 }
 
+function actualizarContadorCriticos() {
+  const notificaciones = JSON.parse(localStorage.getItem('notificaciones') || '[]');
+  const criticos = notificaciones.filter(n => n.tipo === 'critico');
+  const contador = document.getElementById('navbar-notificacion-contador');
+
+  if (contador) {
+    if (criticos.length > 0) {
+      contador.textContent = criticos.length;
+      contador.style.display = 'inline-block';
+    } else {
+      contador.style.display = 'none';
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  actualizarContadorCriticos();
+  setInterval(actualizarContadorCriticos, 1000); // Actualiza cada segundo
+});
+
 // Puedes llamar a enviarNotificacionInterna('Mensaje', 'correo@destino.com') desde cualquier parte del sistema.
