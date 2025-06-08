@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cambiar Rol</title>
+  <link rel="stylesheet" href="cambiar-rol.css">
+</head>
+<body>
+  <main class="center-wrapper">
+    <section class="rol-container">
+      <header>
+        <h2>CAMBIAR ROL MEDICOS</h2>
+      </header>
+      <table class="medicos-table">
+        <thead>
+          <tr>
+            <th>Nombre completo</th>
+            <th>Correo Electrónico</th>
+            <th>Edad</th>
+            <th>Número</th>
+            <th>Rol actual</th>
+            <th>Cambiar Rol</th>
+          </tr>
+        </thead>
+        <tbody id="tablaMedicos">
+          <!-- Se llenará con JS -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <div id="notification-modal" class="notification-modal" style="display: none;">
+    <div class="notification-content">
+      <p id="notification-message"></p>
+      <button id="notification-ok">OK</button>
+    </div>
+  </div>
+
+  <script src="cambiar-rol.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const tablaMedicos = document.getElementById('tablaMedicos');
+      const usuarios = JSON.parse(localStorage.getItem('users') || '[]');
+      const notificationModal = document.getElementById('notification-modal');
+      const notificationMessage = document.getElementById('notification-message');
+      const notificationOk = document.getElementById('notification-ok');
+
+      tablaMedicos.innerHTML = '';
+
+      if (usuarios.length === 0) {
+        tablaMedicos.innerHTML = '<tr><td colspan="6">No hay médicos registrados.</td></tr>';
+      } else {
+        usuarios.forEach(user => {
+          const rolOriginal = user.rol; // Guardar el rol original
+          tablaMedicos.innerHTML += `
+            <tr>
+              <td>${user.nombre || 'N/A'} ${user.apellido || 'N/A'}</td>
+              <td>${user.email || 'N/A'}</td>
+              <td>${user.edad || 'N/A'}</td>
+              <td>${user.telefono || 'N/A'}</td>
+              <td>${user.rol || 'N/A'}</td>
+              <td style="display: flex; align-items: center; justify-content: flex-end;">
+                <select class="rol-select" data-email="${user.email}" style="margin-right: 8px;">
+                  <option value="medico" ${user.rol === 'medico' ? 'selected' : ''}>Médico</option>
+                  <option value="enfermero" ${user.rol === 'enfermero' ? 'selected' : ''}>Enfermero</option>
+                  <option value="supervisor_medico" ${user.rol === 'supervisor_medico' ? 'selected' : ''}>Supervisor médico</option>
+                  <option value="administrador" ${user.rol === 'administrador' ? 'selected' : ''}>Administrador</option>
+                  <option value="director_hospital" ${user.rol === 'director_hospital' ? 'selected' : ''}>Director del hospital</option>
+                </select>
+                <span class="icon-ticket" data-email="${user.email}" title="Confirmar cambio" style="opacity: 0.5; pointer-events: none;">✔️</span>
+                <span class="icon-cross" data-email="${user.email}" title="Cancelar cambio" style="opacity: 0.5; pointer-events: none;">❌</span>
+              </td>
+            </tr>
+          `;
+        });
+
+        document.querySelectorAll('.rol-select').forEach(select => {
+          select.addEventListener('change', function() {
+            const email = this.dataset.email;
+            const ticket = document.querySelector(`.icon-ticket[data-email="${email}"]`);
+            const cross = document.querySelector(`.icon-cross[data-email="${email}"]`);
+
+            // Habilitar los íconos cuando se realice un cambio
+            ticket.style.opacity = '1';
+            ticket.style.pointerEvents = 'auto';
+            cross.style.opacity = '1';
+            cross.style.pointerEvents = 'auto';
+          });
+        });
+
+        document.querySelectorAll('.icon-ticket').forEach(ticket => {
+          ticket.addEventListener('click', function() {
+            const email = this.dataset.email;
+            const select = document.querySelector(`.rol-select[data-email="${email}"]`);
+            const nuevoRol = select.value;
+
+            const usuarios = JSON.parse(localStorage.getItem('users') || '[]');
+            const usuario = usuarios.find(u => u.email === email);
+            if (usuario) {
+              usuario.rol = nuevoRol;
+              localStorage.setItem('users', JSON.stringify(usuarios));
+
+              // Mostrar notificación
+              notificationMessage.innerHTML = `Rol cambiado a <strong>${nuevoRol}</strong> para <strong>${usuario.nombre} ${usuario.apellido}</strong>`;
+              notificationModal.style.display = 'flex';
+            }
+
+            // Deshabilitar los íconos después de confirmar
+            this.style.opacity = '0.5';
+            this.style.pointerEvents = 'none';
+            const cross = document.querySelector(`.icon-cross[data-email="${email}"]`);
+            cross.style.opacity = '0.5';
+            cross.style.pointerEvents = 'none';
+          });
+        });
+
+        document.querySelectorAll('.icon-cross').forEach(cross => {
+          cross.addEventListener('click', function() {
+            const email = this.dataset.email;
+            const select = document.querySelector(`.rol-select[data-email="${email}"]`);
+
+            const usuarios = JSON.parse(localStorage.getItem('users') || '[]');
+            const usuario = usuarios.find(u => u.email === email);
+            if (usuario) {
+              select.value = usuario.rol; // Restaurar el rol original
+            }
+
+            // Deshabilitar los íconos después de cancelar
+            this.style.opacity = '0.5';
+            this.style.pointerEvents = 'none';
+            const ticket = document.querySelector(`.icon-ticket[data-email="${email}"]`);
+            ticket.style.opacity = '0.5';
+            ticket.style.pointerEvents = 'none';
+          });
+        });
+
+        notificationOk.addEventListener('click', function() {
+          notificationModal.style.display = 'none';
+        });
+      }
+    });
+  </script>
+</body>
+</html>

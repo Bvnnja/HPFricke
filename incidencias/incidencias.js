@@ -61,7 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
           <th>Fecha y Hora</th>
           <th>Nivel de Urgencia</th>
           <th>Descripción</th>
-          <th>Acciones</th>
+          <th>Estado</th> <!-- Nueva columna para estado -->
+
         </tr>
       </thead>
       <tbody>
@@ -83,7 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${incidencia.fechaHora}</td>
                 <td><span class="${badgeClass}">${incidencia.nivelUrgencia}</span></td>
                 <td>${incidencia.descripcion}</td>
-                <td><button onclick="eliminarIncidencia(${index})">Eliminar</button></td>
+                <td>${incidencia.estado}</td> <!-- Mostrar estado -->
+
               </tr>
             `;
             }
@@ -123,7 +125,17 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const nuevaIncidencia = { medico, paciente, edad, diagnostico, habitacion, fechaHora, nivelUrgencia, descripcion };
+    const nuevaIncidencia = { 
+      medico, 
+      paciente, 
+      edad, 
+      diagnostico, 
+      habitacion, 
+      fechaHora, 
+      nivelUrgencia, 
+      descripcion, 
+      estado: 'Pendiente' // Nueva categoría estado
+    };
     const incidencias = obtenerIncidencias();
     incidencias.push(nuevaIncidencia);
     guardarIncidencias(incidencias);

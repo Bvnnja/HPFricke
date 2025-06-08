@@ -196,13 +196,23 @@ function cargarNavbar() {
             if (verReportes) verReportes.style.display = 'block';
             if (historialCambios) historialCambios.style.display = 'block';
             if (registrarUsuario) registrarUsuario.style.display = 'block';
-          } else if (usuario.rol === 'supervisor') {
-            if (navRegistrarPaciente) navRegistrarPaciente.style.display = 'block';
-            if (navRegistrarIncidencias) navRegistrarIncidencias.style.display = 'block';
-            if (navPacientes) navPacientes.style.display = 'block';
+          } else if (usuario.rol === 'supervisor_medico') {
             if (dashboardSupervisor) dashboardSupervisor.style.display = 'block';
-            if (verReportes) verReportes.style.display = 'block';
-            if (historialCambios) historialCambios.style.display = 'block';
+            const criticas = document.querySelector('a[href*="criticas.html"]');
+            if (criticas) criticas.style.display = 'block';
+            if (navRegistrarPaciente) navRegistrarPaciente.style.display = 'none';
+            if (navRegistrarIncidencias) navRegistrarIncidencias.style.display = 'none';
+            if (navPacientes) navPacientes.style.display = 'none';
+            if (historialCambios) historialCambios.style.display = 'none';
+            if (registrarUsuario) registrarUsuario.style.display = 'none';
+          } else if (usuario.rol === 'director_hospital') {
+            const reportes = document.querySelector('a[href*="reportes.html"]');
+            if (reportes) reportes.style.display = 'block';
+            if (dashboardSupervisor) dashboardSupervisor.style.display = 'none';
+            if (navRegistrarPaciente) navRegistrarPaciente.style.display = 'none';
+            if (navRegistrarIncidencias) navRegistrarIncidencias.style.display = 'none';
+            if (navPacientes) navPacientes.style.display = 'none';
+            if (historialCambios) historialCambios.style.display = 'none';
             if (registrarUsuario) registrarUsuario.style.display = 'none';
           } else if (usuario.rol === 'medico') {
             if (navRegistrarPaciente) navRegistrarPaciente.style.display = 'none';
@@ -213,12 +223,13 @@ function cargarNavbar() {
             if (historialCambios) historialCambios.style.display = 'block';
             if (registrarUsuario) registrarUsuario.style.display = 'none';
           } else if (usuario.rol === 'enfermero') {
-            if (navRegistrarPaciente) navRegistrarPaciente.style.display = 'none';
+            if (navRegistrarPaciente) navRegistrarPaciente.style.display = 'block';
             if (navRegistrarIncidencias) navRegistrarIncidencias.style.display = 'block';
-            if (navPacientes) navPacientes.style.display = 'block';
+            const editarPaciente = document.querySelector('a[href*="editar-paciente.html"]');
+            if (editarPaciente) editarPaciente.style.display = 'block';
+            if (historialCambios) historialCambios.style.display = 'block';
             if (dashboardSupervisor) dashboardSupervisor.style.display = 'none';
             if (verReportes) verReportes.style.display = 'none';
-            if (historialCambios) historialCambios.style.display = 'block';
             if (registrarUsuario) registrarUsuario.style.display = 'none';
           }
         } else {

@@ -2,12 +2,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const tablaPacientes = document.getElementById('tablaPacientes').querySelector('tbody');
   let temporizadores = {};
 
-  function obtenerPacientes() {
-    return JSON.parse(localStorage.getItem('pacientes') || '[]');
+  // Sí, puedes guardar cualquier objeto serializable en localStorage.
+  // Ejemplo de guardar el tiempo de cada paciente:
+  function guardarPacientes(pacientes) {
+    // Convierte el array/objeto a string JSON y guárdalo
+    localStorage.setItem('pacientes', JSON.stringify(pacientes));
   }
 
-  function guardarPacientes(pacientes) {
-    localStorage.setItem('pacientes', JSON.stringify(pacientes));
+  // Ejemplo de recuperar:
+  function obtenerPacientes() {
+    // Parsea el string JSON a objeto/array
+    return JSON.parse(localStorage.getItem('pacientes') || '[]');
   }
 
   function cargarPacientes() {
@@ -72,12 +77,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const pacientes = obtenerPacientes();
     const paciente = pacientes[index];
 
+    // Obtener el médico logueado
+    const usuarioLogueado = JSON.parse(localStorage.getItem('usuarioLogueado') || '{}');
+    const medicoActual = usuarioLogueado.nombre || '';
+
     if (estado === 'realizado') {
       paciente.tiempoRestante = (paciente.horas * 3600) + (paciente.minutos * 60); // Reinicia el temporizador
+      paciente.medico = medicoActual; // Guardar el médico que realizó el cambio
+
+      // Eliminar notificaciones críticas de este paciente
+      let notificaciones = JSON.parse(localStorage.getItem('notificaciones') || '[]');
+      notificaciones = notificaciones.filter(n =>
+        !(n.tipo === 'critico' && n.mensaje.includes(paciente.nombre) && n.mensaje.includes(paciente.habitacion))
+      );
+      localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+
+      if (typeof window.actualizarContadorNotificaciones === 'function') {
+        window.actualizarContadorNotificaciones();
+      }
     }
 
     paciente.cambioPostural = estado;
     guardarPacientes(pacientes);
+
+    // Guardar en historial de cambios posturales (nuevo al inicio)
+    let historial = JSON.parse(localStorage.getItem('historialCambios') || '[]');
+    historial.unshift({
+      paciente: paciente.nombre,
+      fechaHora: new Date().toISOString(),
+      estado: estado,
+      responsable: medicoActual
+    });
+    localStorage.setItem('historialCambios', JSON.stringify(historial));
+
     cargarPacientes();
     iniciarTemporizadores(); // Asegura que el temporizador se reinicie
   }
@@ -104,17 +136,29 @@ document.addEventListener('DOMContentLoaded', () => {
     Object.values(temporizadores).forEach(intervalId => clearInterval(intervalId));
     temporizadores = {};
 
-    const pacientes = obtenerPacientes();
+    let pacientes = obtenerPacientes();
+
+    // Calcular tiempo real transcurrido desde la última actualización
+    const ahora = Date.now();
+    let pacientesModificados = false;
 
     pacientes.forEach((paciente, index) => {
-      // Asegurar que el tiempo restante esté inicializado correctamente
-      if (typeof paciente.tiempoRestante !== 'number' || isNaN(paciente.tiempoRestante)) {
-        paciente.tiempoRestante = (paciente.horas * 3600) + (paciente.minutos * 60);
+      if (!paciente._ultimaActualizacion) {
+        paciente._ultimaActualizacion = ahora;
+        pacientesModificados = true;
+      } else {
+        const transcurrido = Math.floor((ahora - paciente._ultimaActualizacion) / 1000);
+        if (transcurrido > 0) {
+          paciente.tiempoRestante -= transcurrido;
+          if (paciente.tiempoRestante < -3600) paciente.tiempoRestante = -3600;
+          pacientesModificados = true;
+        }
+        paciente._ultimaActualizacion = ahora;
       }
 
       temporizadores[index] = setInterval(() => {
-        // Reducir el tiempo restante solo si el cambio postural no está en "realizado"
         paciente.tiempoRestante--;
+        paciente._ultimaActualizacion = Date.now();
 
         if (paciente.tiempoRestante === 0) {
           paciente.cambioPostural = 'pendiente';
@@ -122,14 +166,24 @@ document.addEventListener('DOMContentLoaded', () => {
           if (paciente.cambioPostural !== 'critico') {
             paciente.cambioPostural = 'critico';
 
-            // Agregar notificación al localStorage
+            // Agregar notificación al localStorage solo si no existe ya una notificación crítica para este paciente
             let notificaciones = JSON.parse(localStorage.getItem('notificaciones') || '[]');
-            notificaciones.push({
-              tipo: 'critico',
-              mensaje: `El paciente ${paciente.nombre} (Habitación: ${paciente.habitacion}) ha pasado a estado crítico.`,
-              fecha: new Date().toISOString()
-            });
-            localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+            const yaNotificado = notificaciones.some(n =>
+              n.tipo === 'critico' &&
+              n.mensaje.includes(paciente.nombre) &&
+              n.mensaje.includes(paciente.habitacion)
+            );
+            if (!yaNotificado) {
+              notificaciones.push({
+                tipo: 'critico',
+                mensaje: `El paciente ${paciente.nombre} (Habitación: ${paciente.habitacion}) ha pasado a estado crítico.`,
+                fecha: new Date().toISOString()
+              });
+              localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+              if (typeof window.actualizarContadorNotificaciones === 'function') {
+                window.actualizarContadorNotificaciones();
+              }
+            }
           }
         }
 
@@ -143,6 +197,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
       }, 1000);
     });
+
+    // Solo guardar si hubo cambios en los tiempos
+    if (pacientesModificados) {
+      guardarPacientes(pacientes);
+    }
+
+    // Guardar la actualización en localStorage al salir de la página
+    window.onbeforeunload = () => {
+      const pacientes = obtenerPacientes();
+      const ahora = Date.now();
+      pacientes.forEach((paciente) => {
+        paciente._ultimaActualizacion = ahora;
+      });
+      guardarPacientes(pacientes);
+    };
   }
 
   cargarPacientes();

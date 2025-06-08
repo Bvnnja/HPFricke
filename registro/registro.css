@@ -1,5 +1,5 @@
 body {
-  background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #ffebee 100%);
   font-family: 'Segoe UI', Arial, sans-serif;
   margin: 0;
   min-height: 100vh;
@@ -11,11 +11,11 @@ body {
   border-radius: 12px;
   background: #fff;
   box-shadow: 0 4px 24px rgba(33, 150, 243, 0.10), 0 1.5px 8px rgba(0,0,0,0.04);
-  border-top: 6px solid #1976d2;
+  border-top: 6px solid #d32f2f;
   text-align: center;
 }
 .registro-container h2 {
-  color: #1976d2;
+  color: #d32f2f;
   margin-bottom: 18px;
   font-weight: 600;
 }
@@ -24,20 +24,20 @@ body {
   padding: 10px;
   margin: 10px 0;
   border-radius: 6px;
-  border: 1px solid #b0bec5;
-  background: #f5fafd;
+  border: 1px solid #d32f2f;
+  background: #ffebee;
   font-size: 15px;
   transition: border 0.2s;
 }
 .registro-container input:focus {
-  border: 1.5px solid #1976d2;
+  border: 1.5px solid #d32f2f;
   outline: none;
-  background: #e3f2fd;
+  background: #ffcdd2;
 }
 .registro-container button {
   width: 100%;
   padding: 12px;
-  background: #388e3c;
+  background: #d32f2f;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -46,15 +46,18 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: background 0.2s;
-  box-shadow: 0 2px 8px rgba(56,142,60,0.08);
+  box-shadow: 0 2px 8px rgba(211,47,47,0.08);
 }
 .registro-container button:hover {
-  background: #2e7031;
+  background: #b71c1c;
 }
 .registro-container a {
-  color: #1976d2;
+  color: #d32f2f;
   text-decoration: none;
   font-weight: 500;
+}
+.registro-container a:hover {
+  text-decoration: underline;
 }
 .registro-container p {
   margin-top: 18px;
@@ -95,4 +98,40 @@ body {
   border: 1.5px solid #1976d2;
   outline: none;
   background: #e3f2fd;
+}
+.styled-select {
+  width: 98%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 6px;
+  background: #ffebee url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23d32f2f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>') no-repeat right 10px center;
+  background-size: 16px;
+  font-size: 15px;
+  transition: border 0.2s, background 0.2s;
+  appearance: none;
+  cursor: pointer;
+  height: 40px;
+  border: 1px solid #d32f2f; /* Cambiar borde a rojo */
+}
+.styled-select:focus {
+  border: 1.5px solid #d32f2f; /* Mantener borde rojo al enfocar */
+  outline: none;
+  background-color: #ffcdd2;
+}
+.styled-select option {
+  font-size: 14px;
+  padding: 6px;
+}
+.error-message {
+  color: #d32f2f;
+  font-size: 13px;
+  margin: 0; /* Eliminar márgenes */
+  padding: 0; /* Asegurar que no haya relleno */
+  height: 0; /* Ocultar espacio vertical cuando no hay mensaje */
+  overflow: hidden; /* Evitar que el contenido afecte el diseño */
+  display: block; /* Mantener el bloque para evitar reflujo */
+}
+
+.error-message.active {
+  height: auto; /* Mostrar el mensaje cuando sea necesario */
 }

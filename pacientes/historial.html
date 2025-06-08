@@ -35,7 +35,9 @@
       return '<span class="badge-hist badge-registrado">Registrado</span>';
     }
     function renderizarHistorial(filtroPaciente = '') {
-      const historial = JSON.parse(localStorage.getItem('historialCambios') || '[]');
+      let historial = JSON.parse(localStorage.getItem('historialCambios') || '[]');
+      // Mostrar lo más reciente al inicio
+      historial = historial.slice().reverse();
       const tbody = document.getElementById('tablaHistorial').querySelector('tbody');
       tbody.innerHTML = '';
       historial.forEach(item => {
@@ -58,16 +60,12 @@
             fecha = item.fechaHora;
           }
         }
+        const responsable = item.responsable !== undefined ? item.responsable : (item.medico || 'N/A');
         const tr = document.createElement('tr');
-        // Mostrar la postura (badge) en la columna "Postura"
-        tr.innerHTML = `<td>${item.paciente}</td><td>${fecha}${hora ? ' | ' + hora : ''}</td><td>${badgeEstado(item.estado)}</td><td>${item.responsable}</td>`;
+        tr.innerHTML = `<td>${item.paciente}</td><td>${fecha}${hora ? ' | ' + hora : ''}</td><td>${badgeEstado(item.estado)}</td><td>${responsable}</td>`;
         tbody.appendChild(tr);
       });
     }
-    // Quitar filtro por estado
-    // document.getElementById('filtroEstadoHist').addEventListener('change', function() {
-    //   renderizarHistorial(this.value, document.getElementById('filtroPacienteHist').value);
-    // });
     document.getElementById('filtroPacienteHist').addEventListener('input', function() {
       renderizarHistorial(this.value);
     });
