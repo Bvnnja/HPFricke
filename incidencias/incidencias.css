@@ -1,14 +1,14 @@
-/* General */
+/* Tema médico rojo y blanco */
 body {
   font-family: Arial, sans-serif;
-  background: #f5f5f5;
+  background: #fff;
   margin: 0;
   padding: 0;
 }
 
 h1 {
-  color: #1976d2;
-  font-size: 24px;
+  color: #b71c1c;
+  font-size: 1.5rem;
   margin-bottom: 20px;
   text-align: center;
 }
@@ -18,7 +18,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #1976d2;
+  background: #b71c1c;
   color: #fff;
   padding: 10px 20px;
 }
@@ -37,28 +37,28 @@ main {
   display: flex;
   flex-direction: column;
   gap: 30px;
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 20px;
 }
 
 .formulario-incidencias {
-  background: #f9f9f9;
+  background: #fff0f0;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px #b71c1c22;
 }
 
 .incidencias-registradas {
   background: #fff;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px #b71c1c22;
 }
 
 .incidencias-registradas h2 {
   margin-bottom: 20px;
-  color: #1976d2;
+  color: #b71c1c;
 }
 
 /* Formulario */
@@ -74,19 +74,36 @@ form#formIncidencias textarea,
 form#formIncidencias button {
   padding: 10px;
   font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 1.5px solid #ffcdd2;
+  border-radius: 6px;
+  background: #fff;
+  color: #b71c1c;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+form#formIncidencias input:focus,
+form#formIncidencias select:focus,
+form#formIncidencias textarea:focus {
+  border: 1.5px solid #b71c1c;
+  outline: none;
+  background: #fff0f0;
+  box-shadow: 0 2px 8px #ffcdd2;
 }
 
 form#formIncidencias button {
-  background: #1976d2;
-  color: #fff;
+  background: #fff;
+  color: #b71c1c;
+  border: 2px solid #b71c1c;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s;
+  box-shadow: 0 2px 8px #f4433622;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 }
 
 form#formIncidencias button:hover {
-  background: #1565c0;
+  background: #b71c1c;
+  color: #fff;
+  box-shadow: 0 4px 16px #b71c1c55;
 }
 
 /* Lista de incidencias */
@@ -95,40 +112,119 @@ form#formIncidencias button:hover {
   border-collapse: collapse;
   font-size: 14px;
   text-align: left;
+  margin-top: 10px;
 }
 
 #listaIncidencias th,
 #listaIncidencias td {
-  padding: 12px 15px;
-  border: 1px solid #ddd;
+  padding: 10px 12px;
+  border: 1px solid #ffcdd2;
 }
 
 #listaIncidencias th {
-  background-color: #1976d2;
+  background-color: #b71c1c;
   color: #fff;
   text-transform: uppercase;
+  font-weight: 600;
 }
 
 #listaIncidencias tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #ffebee;
+}
+
+#listaIncidencias tr:nth-child(odd) {
+  background-color: #fff;
 }
 
 #listaIncidencias tr:hover {
-  background-color: #e3f2fd;
+  background-color: #ffcdd2;
 }
 
 #listaIncidencias button {
   padding: 6px 10px;
-  background: #d32f2f;
-  color: #fff;
-  border: none;
+  background: #fff;
+  color: #b71c1c;
+  border: 2px solid #b71c1c;
   border-radius: 5px;
   cursor: pointer;
   font-size: 12px;
-  transition: background 0.3s;
+  font-weight: 600;
+  box-shadow: 0 2px 8px #f4433622;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 }
 
 #listaIncidencias button:hover {
   background: #b71c1c;
+  color: #fff;
+  box-shadow: 0 4px 16px #b71c1c55;
+}
+
+/* Badges de urgencia */
+.badge-urgencia {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #fff;
+  display: inline-block;
+}
+
+.badge-bajo {
+  background: #388e3c;
+}
+
+.badge-medio {
+  background: #fbc02d;
+  color: #b71c1c;
+}
+
+.badge-critico {
+  background: #d32f2f;
+}
+
+/* Mensajes globales */
+.msg-global {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  padding: 16px 32px;
+  border-radius: 10px;
+  font-size: 17px;
+  font-weight: 600;
+  box-shadow: 0 2px 12px #b71c1c33;
+  display: none;
+  text-align: center;
+}
+
+.msg-success {
+  background: #e8f5e9;
+  color: #388e3c;
+  border: 2px solid #388e3c;
+}
+
+.msg-error {
+  background: #ffebee;
+  color: #d32f2f;
+  border: 2px solid #d32f2f;
+}
+
+@media (max-width: 900px) {
+  main {
+    padding: 8px 2px;
+    max-width: 100vw;
+  }
+
+  #listaIncidencias th,
+  #listaIncidencias td {
+    font-size: 12px;
+    padding: 6px 2px;
+  }
+
+  h1 {
+    font-size: 1.1rem;
+    padding: 10px 0 8px 0;
+  }
 }
 

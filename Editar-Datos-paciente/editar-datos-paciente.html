@@ -7,19 +7,25 @@
 </head>
 <body>
   <script src="../Navbar/navbar.js"></script>
-  <div class="editar-container">
+  <div class="paciente-container">
     <h1>Editar Datos de Paciente</h1>
-    <div id="formEditar" style="margin-top:24px;">
-
-      <form id="editarPacienteForm">
-        <input type="text" id="editNombre" placeholder="Nombre completo" required>
-        <input type="number" id="editEdad" placeholder="Edad" required>
-        <input type="text" id="editDiagnostico" placeholder="Diagnóstico" required>
-        <input type="text" id="editHabitacion" placeholder="Habitación" required>
-        <button type="submit">Guardar Cambios</button>
-        <button type="button" id="cancelarEditarBtn">Cancelar</button>
-      </form>
-    </div>
+    <form id="editarPacienteForm">
+      <input type="text" id="editNombre" placeholder="Nombre completo" required>
+      <input type="text" id="editRut" placeholder="RUT (Ej: 12.345.678-9)" required>
+      <input type="number" id="editEdad" placeholder="Edad" required>
+      <select id="editSexo" required>
+        <option value="">Sexo</option>
+        <option value="Femenino">Femenino</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Otro">Otro</option>
+      </select>
+      <input type="text" id="editDiagnostico" placeholder="Diagnóstico" required>
+      <input type="text" id="editHabitacion" placeholder="Habitación" required>
+      <input type="date" id="editFechaIngreso" required>
+      <textarea id="editObservaciones" placeholder="Observaciones" rows="2"></textarea>
+      <button type="submit">Guardar Cambios</button>
+      <button type="button" id="cancelarEditarBtn">Cancelar</button>
+    </form>
   </div>
   <script src="editar-datos-paciente.js"></script>
 </body>

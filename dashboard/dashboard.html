@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Supervisor</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <script src="../Navbar/navbar.js"></script>
+  <div class="dashboard-container">
+    <h1>Dashboard de Pacientes y Cambios Posturales</h1>
+    <div class="dashboard-metricas" id="metricasDashboard"></div>
+    <div style="margin-bottom:10px;">
+      <label for="filtroEstadoDash">Filtrar por estado:</label>
+      <select id="filtroEstadoDash">
+        <option value="">Todos</option>
+        <option value="cumplido">Cumplido</option>
+        <option value="critico">Crítico</option>
+        <option value="pendiente">Pendiente</option>
+        <option value="registrado">Registrado</option>
+      </select>
+      <input type="text" id="filtroPacienteDash" placeholder="Buscar por paciente..." style="margin-left:12px;">
+    </div>
+    <table id="tablaDashboard">
+      <thead>
+        <tr>
+          <th>Paciente</th>
+          <th>Habitación</th>
+          <th>Diagnóstico</th>
+          <th>Estado Postural</th>
+          <th>Médico Último Cambio</th>
+          <th>Último Cambio</th>
+          <th>Cumplimiento</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Se llena con JS -->
+      </tbody>
+    </table>
+  </div>
+  <script src="dashboard.js"></script>
+</body>
+</html>

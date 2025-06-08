@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reportes de Gestión</title>
+  <link rel="stylesheet" href="reportes.css">
+</head>
+<body>
+  <script src="../Navbar/navbar.js"></script>
+  <div class="reportes-container">
+    <h1>Reportes de Cambios Posturales y Alertas</h1>
+    <div style="margin-bottom:10px;">
+      <label for="filtroEstadoRep">Filtrar por estado:</label>
+      <select id="filtroEstadoRep">
+        <option value="">Todos</option>
+        <!-- Opciones dinámicas -->
+      </select>
+      <input type="text" id="filtroPacienteRep" placeholder="Buscar por paciente..." style="margin-left:12px;">
+    </div>
+    <button onclick="generarReporte()">Generar Reporte</button>
+    <button onclick="exportarCSV()">Exportar CSV</button>
+    <div id="reporteResultado"></div>
+  </div>
+  <script>
+    // Rellena el filtro de estado con todos los estados únicos del historial
+    function rellenarFiltroEstados() {
+      const historial = JSON.parse(localStorage.getItem('historialCambios') || '[]');
+      const select = document.getElementById('filtroEstadoRep');
+      const estados = Array.from(new Set(historial.map(h => h.estado))).filter(Boolean);
+      select.innerHTML = '<option value="">Todos</option>' +
+        estados.map(e => `<option value="${e}">${e.charAt(0).toUpperCase() + e.slice(1)}</option>`).join('');
+    }
+
+    function badgeEstado(estado) {
+      if (estado === 'realizado') return '<span class="badge-hist badge-realizado">Realizado</span>';
+      if (estado === 'critico') return '<span class="badge-hist badge-critico">Crítico</span>';
+      if (estado === 'pendiente') return '<span class="badge-hist badge-pendiente">Pendiente</span>';
+      return '<span class="badge-hist badge-registrado">Registrado</span>';
+    }
+
+    function generarReporte() {
+      const historial = JSON.parse(localStorage.getItem('historialCambios') || '[]');
+      const estadoFiltro = document.getElementById('filtroEstadoRep').value;
+      const pacienteFiltro = document.getElementById('filtroPacienteRep').value.toLowerCase();
+      const filtrado = historial.filter(h =>
+        (!estadoFiltro || h.estado === estadoFiltro) &&
+        (!pacienteFiltro || h.paciente.toLowerCase().includes(pacienteFiltro))
+      );
+      document.getElementById('reporteResultado').innerHTML = `
+        <div class="metricas-reporte">
+          <div class="metric-card metric-cumplido">Realizados a tiempo: <b>${filtrado.filter(h=>h.estado==='realizado').length}</b></div>
+          <div class="metric-card metric-critico">Críticos: <b>${filtrado.filter(h=>h.estado==='critico').length}</b></div>
+          <div class="metric-card metric-pendiente">Pendientes: <b>${filtrado.filter(h=>h.estado==='pendiente').length}</b></div>
+          <div class="metric-card metric-registrado">Registrados: <b>${filtrado.filter(h=>h.estado==='registrado').length}</b></div>
+        </div>
+        <p>Total de cambios posturales filtrados: <b>${filtrado.length}</b></p>
+        <table class="tabla-reporte">
+          <thead>
+            <tr>
+              <th>Paciente</th>
+              <th>Fecha | Hora</th>
+              <th>Postura</th>
+              <th>Responsable</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filtrado.map(h => {
+              // Formatear fecha/hora
+              let fecha = '';
+              let hora = '';
+              if (h.fechaHora) {
+                const dt = new Date(h.fechaHora);
+                if (!isNaN(dt.getTime())) {
+                  fecha = dt.toLocaleDateString();
+                  hora = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                }
+              }
+              const claseCritico = h.estado === 'critico' ? 'style="background:#ffebee;font-weight:bold;"' : '';
+              return `<tr ${claseCritico}>
+                <td>${h.paciente}</td>
+                <td>${fecha}${hora ? ' | ' + hora : ''}</td>
+                <td>${badgeEstado(h.estado)}</td>
+                <td>${h.responsable || ''}</td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+    function exportarCSV() {
+      const historial = JSON.parse(localStorage.getItem('historialCambios') || '[]');
+      let csv = 'Paciente,Fecha/Hora,Postura,Responsable\n';
+      historial.forEach(h => {
+        // Formatear fecha/hora igual que en el reporte
+        let fecha = '';
+        let hora = '';
+        if (h.fechaHora) {
+          const dt = new Date(h.fechaHora);
+          if (!isNaN(dt.getTime())) {
+            fecha = dt.toLocaleDateString();
+            hora = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          } else if (typeof h.fechaHora === 'string' && h.fechaHora.includes(',')) {
+            const partes = h.fechaHora.split(',');
+            fecha = partes[0].trim();
+            hora = partes[1].trim();
+          } else {
+            fecha = h.fechaHora;
+          }
+        }
+        csv += `"${h.paciente}","${fecha}${hora ? ' | ' + hora : ''}","${h.estado || ''}","${h.responsable || ''}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'reporte_cambios_posturales.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    document.getElementById('filtroEstadoRep').addEventListener('change', generarReporte);
+    document.getElementById('filtroPacienteRep').addEventListener('input', generarReporte);
+
+    // Inicialización: rellena el filtro y muestra todos los registros
+    rellenarFiltroEstados();
+    generarReporte();
+  </script>
+</body>
+</html>

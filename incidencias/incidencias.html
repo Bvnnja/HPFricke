@@ -12,6 +12,7 @@
   <main>
     <section class="formulario-incidencias">
       <h1>Registrar Incidencia Médica</h1>
+      <div id="msgIncidencia" class="msg-global" style="display:none;"></div>
       <form id="formIncidencias">
         <label for="medico">Médico Responsable</label>
         <input type="text" id="medico" readonly />
@@ -38,9 +39,18 @@
         <button type="submit">Registrar Incidencia</button>
       </form>
     </section>
-
     <section class="incidencias-registradas">
       <h2>Incidencias Registradas</h2>
+      <div style="margin-bottom:10px;">
+        <label for="filtroUrgencia">Filtrar por urgencia:</label>
+        <select id="filtroUrgencia">
+          <option value="">Todas</option>
+          <option value="bajo">Bajo</option>
+          <option value="medio">Medio</option>
+          <option value="critico">Crítico</option>
+        </select>
+        <input type="text" id="filtroPacienteInc" placeholder="Buscar por paciente..." style="margin-left:12px;">
+      </div>
       <table id="listaIncidencias">
         <!-- Se llenará con JS -->
       </table>

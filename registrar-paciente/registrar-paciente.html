@@ -19,27 +19,22 @@
     <h1>Registrar Paciente</h1>
     <form id="pacienteForm">
       <input type="text" id="nombre" placeholder="Nombre completo" required>
+      <input type="text" id="rut" placeholder="RUT (Ej: 12.345.678-9)" required>
       <input type="number" id="edad" placeholder="Edad" required>
+      <select id="sexo" required>
+        <option value="">Sexo</option>
+        <option value="Femenino">Femenino</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Otro">Otro</option>
+      </select>
       <input type="text" id="diagnostico" placeholder="Diagnóstico" required>
       <input type="text" id="habitacion" placeholder="Habitación" required>
+      <input type="date" id="fechaIngreso" required>
+      <textarea id="observaciones" placeholder="Observaciones" rows="2"></textarea>
       <button type="submit" id="guardarBtn">Registrar Paciente</button>
       <button type="button" id="cancelarBtn" style="display:none;">Cancelar</button>
     </form>
-    <h2>Pacientes Registrados</h2>
-    <table id="tablaPacientes">
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Edad</th>
-          <th>Diagnóstico</th>
-          <th>Habitación</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Pacientes se mostrarán aquí -->
-      </tbody>
-    </table>
+    <a href="../pacientes-registrados/pacientes-registrados.html" class="btn-volver" style="margin-top:18px;display:inline-block;">Ver Pacientes Registrados</a>
   </div>
   <script src="registrar-paciente.js"></script>
 </body>
