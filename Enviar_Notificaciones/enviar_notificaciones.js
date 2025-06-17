@@ -6,7 +6,8 @@ function enviarNotificacion({ tipo = 'interna', mensaje, para }) {
     tipo,
     mensaje,
     para,
-    fecha: new Date().toISOString()
+    fecha: new Date().toISOString(),
+    leido: false // Marcar como no leído inicialmente
   });
   localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
   return true;

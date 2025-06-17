@@ -46,7 +46,7 @@
   color: #ff0000;
   text-decoration: none;
   font-weight: 500;
-  font-size: 15px;
+  font-size: 18px; /* Ajustar tamaño general */
   transition: color 0.2s;
   padding: 6px 14px;
   border-radius: 4px;
@@ -57,6 +57,27 @@
 .navbar-links a:hover {
   background: rgba(255, 255, 255, 0.1);
   color: #ffb3b3;
+}
+
+#nav-historial-cambios a {
+  font-size: 24px; /* Tamaño específico para el emoji 💬 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px; /* Asegura que esté alineado con otros elementos */
+}
+
+#navbar-chat-contador {
+  position: absolute;
+  top: -10px; /* Ajustar posición vertical */
+  right: -10px; /* Ajustar posición horizontal */
+  background-color: #d32f2f; /* Color de fondo igual al de notificaciones críticas */
+  color: white; /* Color del texto */
+  border-radius: 50%; /* Forma circular */
+  padding: 4px 8px; /* Tamaño del contador */
+  font-size: 14px; /* Tamaño del texto */
+  display: none; /* Ocultar por defecto */
+  box-shadow: 0 2px 8px rgba(211, 47, 47, 0.18); /* Sombra igual a la de notificaciones críticas */
 }
 
 .navbar-usuario {

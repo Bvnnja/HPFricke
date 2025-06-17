@@ -184,6 +184,24 @@ function actualizarContadorNotificacionesInternas() {
   }
 }
 
+function actualizarContadorMensajesChat() {
+  const usuario = JSON.parse(localStorage.getItem('usuarioLogueado') || '{}');
+  const mensajes = JSON.parse(localStorage.getItem('notificaciones') || '[]');
+  const nuevosMensajes = mensajes.filter(m => m.tipo === 'interna' && (m.para === usuario.email || m.para === 'todos') && !m.leido);
+  const contadorChat = document.getElementById('navbar-chat-contador');
+
+  if (contadorChat) {
+    const cantidad = nuevosMensajes.length;
+    contadorChat.textContent = cantidad;
+    contadorChat.style.display = cantidad > 0 ? 'inline-block' : 'none';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  actualizarContadorMensajesChat();
+  setInterval(actualizarContadorMensajesChat, 1000); // Actualiza cada segundo
+});
+
 function cargarNavbar() {
   fetch('../Navbar/navbar.html')
     .then(res => res.text())
@@ -196,6 +214,13 @@ function cargarNavbar() {
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = html;
       const navbarElement = tempDiv.firstElementChild;
+
+      // Agregar el nuevo elemento al navbar
+      const historialCambios = document.createElement('li');
+      historialCambios.id = 'nav-historial-cambios';
+      historialCambios.style.display = 'block'; // Cambiar a 'block' para que se muestre
+      navbarElement.querySelector('ul').appendChild(historialCambios); // Asegura que se agregue dentro del <ul>
+
       document.body.insertBefore(navbarElement, document.body.firstChild);
 
       // Asegura que el CSS del navbar esté cargado solo una vez
