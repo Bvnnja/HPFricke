@@ -166,8 +166,8 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     // Observaciones (opcional, pero máximo 200 caracteres)
-    if (observaciones.length > 200) {
-      alert('Las observaciones no pueden superar 200 caracteres.');
+    if (observaciones.length > 600) {
+      alert('Las observaciones no pueden superar 600 caracteres.');
       document.getElementById('observaciones').focus();
       return;
     }

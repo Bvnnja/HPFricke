@@ -75,7 +75,7 @@ body {
   color: #fff;
   display: inline-block;
 }
-.badge-realizado { background: #b71c1c; }
+.badge-realizado { background: #2eb71c; }
 .badge-critico { background: #d32f2f; }
 .badge-pendiente { background: #fbc02d; color: #b71c1c; }
 .badge-registrado { background: #fff; color: #b71c1c; border: 1.5px solid #b71c1c; }

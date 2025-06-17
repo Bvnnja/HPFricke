@@ -9,20 +9,22 @@
   <script src="../Navbar/navbar.js"></script>
   <div class="reportes-container">
     <h1>Reportes de Cambios Posturales y Alertas</h1>
-    <div style="margin-bottom:10px;">
+    <div class="filtros">
       <label for="filtroEstadoRep">Filtrar por estado:</label>
       <select id="filtroEstadoRep">
         <option value="">Todos</option>
         <!-- Opciones dinámicas -->
       </select>
-      <input type="text" id="filtroPacienteRep" placeholder="Buscar por paciente..." style="margin-left:12px;">
+      <input type="text" id="filtroPacienteRep" placeholder="Buscar por paciente...">
+      <div class="acciones">
+        <button onclick="generarReporte()">Generar Reporte</button>
+        <button onclick="exportarCSV()">Exportar Reporte</button>
+      </div>
     </div>
-    <button onclick="generarReporte()">Generar Reporte</button>
-    <button onclick="exportarCSV()">Exportar CSV</button>
     <div id="reporteResultado"></div>
   </div>
   <script>
-    // Rellena el filtro de estado con todos los estados únicos del historial
+    // Funciones de inicialización y lógica
     function rellenarFiltroEstados() {
       const historial = JSON.parse(localStorage.getItem('historialCambios') || '[]');
       const select = document.getElementById('filtroEstadoRep');
@@ -46,12 +48,15 @@
         (!estadoFiltro || h.estado === estadoFiltro) &&
         (!pacienteFiltro || h.paciente.toLowerCase().includes(pacienteFiltro))
       );
+
+      const cumplidosATiempo = filtrado.filter(h => h.estado === 'realizado' && h.tiempoCumplido === true).length;
+
       document.getElementById('reporteResultado').innerHTML = `
         <div class="metricas-reporte">
-          <div class="metric-card metric-cumplido">Realizados a tiempo: <b>${filtrado.filter(h=>h.estado==='realizado').length}</b></div>
-          <div class="metric-card metric-critico">Críticos: <b>${filtrado.filter(h=>h.estado==='critico').length}</b></div>
-          <div class="metric-card metric-pendiente">Pendientes: <b>${filtrado.filter(h=>h.estado==='pendiente').length}</b></div>
-          <div class="metric-card metric-registrado">Registrados: <b>${filtrado.filter(h=>h.estado==='registrado').length}</b></div>
+          <div class="metric-card metric-cumplido">Realizados a tiempo: <b>${cumplidosATiempo}</b></div>
+          <div class="metric-card metric-critico">Críticos: <b>${filtrado.filter(h => h.estado === 'critico').length}</b></div>
+          <div class="metric-card metric-pendiente">Pendientes: <b>${filtrado.filter(h => h.estado === 'pendiente').length}</b></div>
+          <div class="metric-card metric-registrado">Registrados: <b>${filtrado.filter(h => h.estado === 'registrado').length}</b></div>
         </div>
         <p>Total de cambios posturales filtrados: <b>${filtrado.length}</b></p>
         <table class="tabla-reporte">
@@ -61,11 +66,11 @@
               <th>Fecha | Hora</th>
               <th>Postura</th>
               <th>Responsable</th>
+              <th>Cumplido a tiempo</th>
             </tr>
           </thead>
           <tbody>
             ${filtrado.map(h => {
-              // Formatear fecha/hora
               let fecha = '';
               let hora = '';
               if (h.fechaHora) {
@@ -81,17 +86,18 @@
                 <td>${fecha}${hora ? ' | ' + hora : ''}</td>
                 <td>${badgeEstado(h.estado)}</td>
                 <td>${h.responsable || ''}</td>
+                <td>${h.tiempoCumplido ? 'Sí' : 'No'}</td>
               </tr>`;
             }).join('')}
           </tbody>
         </table>
       `;
     }
+
     function exportarCSV() {
       const historial = JSON.parse(localStorage.getItem('historialCambios') || '[]');
-      let csv = 'Paciente,Fecha/Hora,Postura,Responsable\n';
+      let csv = 'Paciente,Fecha/Hora,Postura,Responsable,Cumplido a tiempo\n';
       historial.forEach(h => {
-        // Formatear fecha/hora igual que en el reporte
         let fecha = '';
         let hora = '';
         if (h.fechaHora) {
@@ -99,15 +105,9 @@
           if (!isNaN(dt.getTime())) {
             fecha = dt.toLocaleDateString();
             hora = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          } else if (typeof h.fechaHora === 'string' && h.fechaHora.includes(',')) {
-            const partes = h.fechaHora.split(',');
-            fecha = partes[0].trim();
-            hora = partes[1].trim();
-          } else {
-            fecha = h.fechaHora;
           }
         }
-        csv += `"${h.paciente}","${fecha}${hora ? ' | ' + hora : ''}","${h.estado || ''}","${h.responsable || ''}"\n`;
+        csv += `"${h.paciente}","${fecha}${hora ? ' | ' + hora : ''}","${h.estado || ''}","${h.responsable || ''}","${h.tiempoCumplido ? 'Sí' : 'No'}"\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
@@ -117,12 +117,14 @@
       a.click();
       URL.revokeObjectURL(url);
     }
+
     document.getElementById('filtroEstadoRep').addEventListener('change', generarReporte);
     document.getElementById('filtroPacienteRep').addEventListener('input', generarReporte);
 
-    // Inicialización: rellena el filtro y muestra todos los registros
+    // Inicialización
     rellenarFiltroEstados();
     generarReporte();
   </script>
 </body>
+</html>
 </html>
