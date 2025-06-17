@@ -9,7 +9,6 @@
       <li id="nav-login"><a href="../login/login.html">Iniciar Sesión</a></li>
       <li id="nav-registro"><a href="../registro/registro.html">Registrarse</a></li>
       <li id="nav-registrar-paciente" style="display:none;"><a href="../registrar-paciente/registrar-paciente.html">Registrar Paciente</a></li>
-      <li id="nav-registrar-incidencias" style="display:none;"><a href="../incidencias/incidencias.html">Registrar Incidencias</a></li>
       <li id="nav-pacientes" style="display:none;"><a href="../pacientes/pacientes.html">Pacientes</a></li>
     </ul>
     <!-- Notificación de alertas críticas -->
@@ -49,20 +48,22 @@
       </div>
     </div>
     <!-- Notificaciones internas HU-15 -->
-    <div id="notificaciones-internas" style="margin-left:18px;">
-      <button onclick="document.getElementById('modal-notificaciones-internas').style.display='block';" style="background:none;border:none;font-size:20px;cursor:pointer;" title="Notificaciones internas">📩</button>
-      <div id="modal-notificaciones-internas" style="display:none;position:fixed;top:80px;right:30px;z-index:9999;background:#e3f2fd;border:2px solid #1976d2;border-radius:10px;box-shadow:0 2px 8px rgba(33,150,243,0.18);max-width:340px;width:90vw;padding:18px 16px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <h3 style="color:#1976d2;font-size:20px;margin:0;">Notificaciones Internas</h3>
-          <button onclick="document.getElementById('modal-notificaciones-internas').style.display='none';" style="background:none;border:none;font-size:20px;cursor:pointer;color:#111;">✖</button>
-        </div>
-        <ul id="lista-notificaciones-internas" style="list-style:none;padding:0;margin:14px 0 0 0;max-height:300px;overflow-y:auto;">
-          <!-- Se llena con JS -->
-        </ul>
-      </div>
+    <div id="navbar-notificacion-interna" style="display:inline-block;position:relative;margin-left:18px;cursor:pointer;">
+      <span style="font-size:22px;vertical-align:middle;">📬</span>
+      <span id="navbar-notificacion-interna-contador" style="position:absolute;top:-8px;right:-8px;background:#d32f2f;color:#fff;border-radius:50%;padding:2px 7px;font-size:13px;display:none;">0</span>
     </div>
   </div>
 </nav>
+<!-- Modal de notificaciones internas -->
+<div id="modal-notificaciones-internas" style="display:none;position:fixed;top:80px;right:30px;z-index:9999;background:#e3f2fd;border:2px solid #1976d2;border-radius:10px;box-shadow:0 2px 8px rgba(33,150,243,0.18);max-width:340px;width:90vw;padding:18px 16px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <h3 style="color:#1976d2;font-size:20px;margin:0;">Notificaciones Internas</h3>
+    <button id="cerrar-modal-notificaciones-internas" style="background:none;border:none;font-size:20px;cursor:pointer;color:#111;">✖</button>
+  </div>
+  <ul id="lista-notificaciones-internas" style="list-style:none;padding:0;margin:14px 0 0 0;max-height:300px;overflow-y:auto;">
+    <!-- Se llena con JS -->
+  </ul>
+</div>
 <script>
   // Solo lógica de color
   function aplicarColorNotificacionesNavbar() {

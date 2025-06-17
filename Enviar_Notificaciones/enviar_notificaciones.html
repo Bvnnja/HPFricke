@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Enviar Notificaciones Internas</title>
+  <link rel="stylesheet" href="enviar_notificaciones.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Enviar Notificación Interna</h1>
+    <form id="formNotificacion">
+      <label for="para">Destinatario:</label>
+      <select id="para" required>
+        <!-- Se llena dinámicamente con JS -->
+      </select>
+      <label for="mensaje">Mensaje:</label>
+      <textarea id="mensaje" placeholder="Escribe tu mensaje aquí..." required></textarea>
+      <button type="submit">Enviar</button>
+    </form>
+    <p id="resultado"></p>
+    <h2>Notificaciones Enviadas</h2>
+    <ul id="lista-notificaciones">
+      <!-- Se llena dinámicamente con JS -->
+    </ul>
+  </div>
+  <script src="enviar_notificaciones.js"></script>
+</body>
+</html>

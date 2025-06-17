@@ -100,20 +100,88 @@ function mostrarDashboardCriticos() {
 }
 
 function mostrarNotificacionesInternas() {
-  // HU-8 y HU-15: Mostrar notificaciones internas
   const usuario = JSON.parse(localStorage.getItem('usuarioLogueado') || '{}');
-  const notis = JSON.parse(localStorage.getItem('notificaciones') || '[]');
+  const notificaciones = JSON.parse(localStorage.getItem('notificaciones') || '[]');
   const lista = document.getElementById('lista-notificaciones-internas');
   if (!lista) return;
+
   lista.innerHTML = '';
-  notis.forEach(n => {
-    // Mostrar solo si es para médicos o para todos
-    if (usuario.rol === 'medico' || usuario.rol === 'supervisor' || n.para === usuario.email || !n.para) {
-      const li = document.createElement('li');
-      li.textContent = `[${new Date(n.fecha).toLocaleString()}] ${n.mensaje}`;
-      lista.appendChild(li);
-    }
+  const notificacionesFiltradas = notificaciones.filter(n =>
+    n.tipo === 'interna' && (n.para === usuario.email || n.para === 'todos')
+  );
+
+  if (notificacionesFiltradas.length === 0) {
+    lista.innerHTML = '<li style="color:#888;">No hay notificaciones internas.</li>';
+    return;
+  }
+
+  notificacionesFiltradas.forEach(n => {
+    const li = document.createElement('li');
+    li.className = 'noti-interna-li';
+    li.innerHTML = `
+      <strong>${n.para === 'todos' ? 'Para todos' : n.para}</strong><br>
+      <span style="color:#1976d2;">${new Date(n.fecha).toLocaleString()}</span><br>
+      ${n.mensaje}
+    `;
+    lista.appendChild(li);
   });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const notificacionesDiv = document.getElementById('notificaciones-internas');
+
+  if (notificacionesDiv) {
+    notificacionesDiv.addEventListener('click', function() {
+      window.location.href = '../Visualizar_Notificaciones/visualizar_notificaciones.html';
+    });
+  }
+
+  const notificacionesIcono = document.getElementById('icono-notificaciones-internas');
+
+  if (notificacionesIcono) {
+    notificacionesIcono.addEventListener('click', function() {
+      window.location.href = '../Visualizar_Notificaciones/visualizar_notificaciones.html';
+    });
+  }
+
+  const contadorNotificacionesInternas = document.getElementById('navbar-notificaciones-internas-contador');
+  if (contadorNotificacionesInternas) {
+    actualizarContadorNotificacionesInternas();
+    setInterval(actualizarContadorNotificacionesInternas, 1000); // Actualiza cada segundo
+  }
+
+  const notificacionesInternasDiv = document.getElementById('navbar-notificacion-interna');
+  const modalNotificacionesInternas = document.getElementById('modal-notificaciones-internas');
+  const cerrarModalNotificacionesInternas = document.getElementById('cerrar-modal-notificaciones-internas');
+
+  if (notificacionesInternasDiv && modalNotificacionesInternas) {
+    notificacionesInternasDiv.addEventListener('click', function() {
+      console.log('Botón de notificaciones internas clickeado'); // Mensaje de depuración
+      mostrarNotificacionesInternas();
+      modalNotificacionesInternas.style.display = 'block';
+    });
+  }
+
+  if (cerrarModalNotificacionesInternas && modalNotificacionesInternas) {
+    cerrarModalNotificacionesInternas.addEventListener('click', function() {
+      modalNotificacionesInternas.style.display = 'none';
+    });
+  }
+});
+
+function actualizarContadorNotificacionesInternas() {
+  const usuario = JSON.parse(localStorage.getItem('usuarioLogueado') || '{}');
+  const notificaciones = JSON.parse(localStorage.getItem('notificaciones') || '[]');
+  const notificacionesFiltradas = notificaciones.filter(n =>
+    n.tipo === 'interna' && (n.para === usuario.email || n.para === 'todos')
+  );
+  const contador = document.getElementById('navbar-notificaciones-internas-contador');
+
+  if (contador) {
+    const cantidad = notificacionesFiltradas.length;
+    contador.textContent = cantidad;
+    contador.style.display = cantidad > 0 ? 'inline-block' : 'none';
+  }
 }
 
 function cargarNavbar() {
@@ -321,6 +389,12 @@ function actualizarContadorCriticos() {
   }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+  actualizarContadorCriticos();
+  setInterval(actualizarContadorCriticos, 1000); // Actualiza cada segundo
+});
+
+// Puedes llamar a enviarNotificacionInterna('Mensaje', 'correo@destino.com') desde cualquier parte del sistema.
 document.addEventListener('DOMContentLoaded', () => {
   actualizarContadorCriticos();
   setInterval(actualizarContadorCriticos, 1000); // Actualiza cada segundo
